@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CoWork Space</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏢 Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" onclick="showSection('dashboard')">
+                    📊 Dashboard
+                </a>
+                <a href="#hubs" class="nav-item" onclick="showSection('hubs')">
+                    🏢 Working Hubs
+                </a>
+                <a href="#workspaces" class="nav-item" onclick="showSection('workspaces')">
+                    💼 Workspaces
+                </a>
+                <a href="#resources" class="nav-item" onclick="showSection('resources')">
+                    🎯 Resources
+                </a>
+                <a href="#bookings" class="nav-item" onclick="showSection('bookings')">
+                    📅 Bookings
+                </a>
+                <a href="#pricing" class="nav-item" onclick="showSection('pricing')">
+                    💰 Pricing Rules
+                </a>
+                <a href="#qr-codes" class="nav-item" onclick="showSection('qr-codes')">
+                    📱 QR Codes
+                </a>
+                <a href="#transactions" class="nav-item" onclick="showSection('transactions')">
+                    💳 Transactions
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="admin-section active">
+                <h1>Dashboard</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏢</div>
+                        <div class="stat-info">
+                            <h3 id="totalHubs">0</h3>
+                            <p>Total Hubs</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💼</div>
+                        <div class="stat-info">
+                            <h3 id="totalWorkspaces">0</h3>
+                            <p>Total Workspaces</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-info">
+                            <h3 id="totalBookings">0</h3>
+                            <p>Total Bookings</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-info">
+                            <h3 id="totalRevenue">₹0</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Recent Bookings</h3>
+                        <div id="recentBookings" class="recent-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Working Hubs Section -->
+            <section id="hubs" class="admin-section">
+                <div class="section-header">
+                    <h1>Working Hubs</h1>
+                    <button class="btn-primary" onclick="showHubModal()">+ Add Hub</button>
+                </div>
+                <div id="hubsList" class="data-table-container"></div>
+            </section>
+
+            <!-- Workspaces Section -->
+            <section id="workspaces" class="admin-section">
+                <div class="section-header">
+                    <h1>Workspaces</h1>
+                    <button class="btn-primary" onclick="showWorkspaceModal()">+ Add Workspace</button>
+                </div>
+                <div id="workspacesList" class="data-table-container"></div>
+            </section>
+
+            <!-- Resources Section -->
+            <section id="resources" class="admin-section">
+                <div class="section-header">
+                    <h1>Resources</h1>
+                    <button class="btn-primary" onclick="showResourceModal()">+ Add Resource</button>
+                </div>
+                <div id="resourcesList" class="data-table-container"></div>
+            </section>
+
+            <!-- Bookings Section -->
+            <section id="bookings" class="admin-section">
+                <div class="section-header">
+                    <h1>Bookings</h1>
+                    <div class="filter-buttons">
+                        <button class="btn-filter" onclick="filterBookings('')">All</button>
+                        <button class="btn-filter" onclick="filterBookings('confirmed')">Confirmed</button>
+                        <button class="btn-filter" onclick="filterBookings('checked_in')">Checked In</button>
+                        <button class="btn-filter" onclick="filterBookings('cancelled')">Cancelled</button>
+                    </div>
+                </div>
+                <div id="bookingsList" class="data-table-container"></div>
+            </section>
+
+            <!-- Pricing Rules Section -->
+            <section id="pricing" class="admin-section">
+                <div class="section-header">
+                    <h1>Pricing Rules</h1>
+                    <button class="btn-primary" onclick="showPricingModal()">+ Add Pricing Rule</button>
+                </div>
+                <div id="pricingList" class="data-table-container"></div>
+            </section>
+
+            <!-- QR Codes Section -->
+            <section id="qr-codes" class="admin-section">
+                <div class="section-header">
+                    <h1>QR Codes</h1>
+                </div>
+                <div id="qrCodesList" class="data-table-container"></div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions" class="admin-section">
+                <div class="section-header">
+                    <h1>Transactions</h1>
+                    <div class="filter-buttons">
+                        <button class="btn-filter" onclick="filterTransactions('all')">All</button>
+                        <button class="btn-filter" onclick="filterTransactions('success')">Success</button>
+                        <button class="btn-filter" onclick="filterTransactions('failed')">Failed</button>
+                    </div>
+                </div>
+                <div class="stats-mini">
+                    <div class="stat-mini-card">
+                        <h3 id="totalTransactions">0</h3>
+                        <p>Total Transactions</p>
+                    </div>
+                    <div class="stat-mini-card success">
+                        <h3 id="successfulTransactions">0</h3>
+                        <p>Successful</p>
+                    </div>
+                    <div class="stat-mini-card">
+                        <h3 id="transactionRevenue">₹0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+                <div id="transactionsList" class="data-table-container"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Hub Modal -->
+    <div id="hubModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="hubModalTitle">Add Working Hub</h2>
+                <button class="close-btn" onclick="closeModal('hubModal')">&times;</button>
+            </div>
+            <form id="hubForm" onsubmit="saveHub(event)">
+                <input type="hidden" id="hubId">
+                <div class="form-group">
+                    <label>Hub Name *</label>
+                    <input type="text" id="hubName" required>
+                </div>
+                <div class="form-group">
+                    <label>Address *</label>
+                    <textarea id="hubAddress" rows="3" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>City *</label>
+                        <input type="text" id="hubCity" required>
+                    </div>
+                    <div class="form-group">
+                        <label>State *</label>
+                        <input type="text" id="hubState" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Country *</label>
+                        <input type="text" id="hubCountry" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Pincode *</label>
+                        <input type="text" id="hubPincode" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Latitude</label>
+                        <input type="number" step="any" id="hubLatitude">
+                    </div>
+                    <div class="form-group">
+                        <label>Longitude</label>
+                        <input type="number" step="any" id="hubLongitude">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('hubModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Hub</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Workspace Modal -->
+    <div id="workspaceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="workspaceModalTitle">Add Workspace</h2>
+                <button class="close-btn" onclick="closeModal('workspaceModal')">&times;</button>
+            </div>
+            <form id="workspaceForm" onsubmit="saveWorkspace(event)">
+                <input type="hidden" id="workspaceId">
+                <div class="form-group">
+                    <label>Select Hub *</label>
+                    <select id="workspaceHubId" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Workspace Name *</label>
+                    <input type="text" id="workspaceName" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type *</label>
+                        <select id="workspaceType" required>
+                            <option value="meeting_room">Meeting Room</option>
+                            <option value="hotdesk">Hot Desk</option>
+                            <option value="cabin">Cabin</option>
+                            <option value="conference">Conference Hall</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Capacity *</label>
+                        <input type="number" id="workspaceCapacity" min="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Base Price (₹/hour) *</label>
+                    <input type="number" step="0.01" id="workspaceBasePrice" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Amenities (comma-separated)</label>
+                    <input type="text" id="workspaceAmenities" placeholder="Wi-Fi, AC, Coffee, Parking">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('workspaceModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Workspace</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Resource Modal -->
+    <div id="resourceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="resourceModalTitle">Add Resource</h2>
+                <button class="close-btn" onclick="closeModal('resourceModal')">&times;</button>
+            </div>
+            <form id="resourceForm" onsubmit="saveResource(event)">
+                <input type="hidden" id="resourceId">
+                <div class="form-group">
+                    <label>Select Workspace *</label>
+                    <select id="resourceWorkspaceId" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Resource Name *</label>
+                    <input type="text" id="resourceName" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="resourceDescription" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Price per Slot (₹) *</label>
+                        <input type="number" step="0.01" id="resourcePrice" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity Available *</label>
+                        <input type="number" id="resourceQuantity" min="1" required>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('resourceModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Resource</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pricing Rule Modal -->
+    <div id="pricingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="pricingModalTitle">Add Pricing Rule</h2>
+                <button class="close-btn" onclick="closeModal('pricingModal')">&times;</button>
+            </div>
+            <form id="pricingForm" onsubmit="savePricing(event)">
+                <input type="hidden" id="pricingId">
+                <div class="form-group">
+                    <label>Select Workspace *</label>
+                    <select id="pricingWorkspaceId" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Rule Type *</label>
+                    <select id="pricingRuleType" required>
+                        <option value="demand">Demand-based</option>
+                        <option value="peak_hours">Peak Hours</option>
+                        <option value="weekend">Weekend</option>
+                        <option value="room_type">Room Type</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Percentage Modifier (%)</label>
+                        <input type="number" step="0.01" id="pricingPercentage" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Flat Modifier (₹)</label>
+                        <input type="number" step="0.01" id="pricingFlat" value="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="time" id="pricingStartTime">
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="time" id="pricingEndTime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Days (comma-separated, e.g., Mon,Tue,Wed)</label>
+                    <input type="text" id="pricingDays" placeholder="Mon,Tue,Wed">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal('pricingModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Pricing Rule</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

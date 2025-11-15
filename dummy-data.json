@@ -1,0 +1,313 @@
+{
+  "working_hubs": [
+    {
+      "name": "Tech Hub Downtown",
+      "address": "123 Innovation Street, Tech Park",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "country": "India",
+      "pincode": "400001",
+      "latitude": 19.0760,
+      "longitude": 72.8777
+    },
+    {
+      "name": "Creative Workspace Bangalore",
+      "address": "456 Startup Avenue, MG Road",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "country": "India",
+      "pincode": "560001",
+      "latitude": 12.9716,
+      "longitude": 77.5946
+    },
+    {
+      "name": "Business Center Delhi",
+      "address": "789 Corporate Boulevard, Connaught Place",
+      "city": "Delhi",
+      "state": "Delhi",
+      "country": "India",
+      "pincode": "110001",
+      "latitude": 28.6139,
+      "longitude": 77.2090
+    },
+    {
+      "name": "Innovation Hub Pune",
+      "address": "321 Tech Valley, Hinjewadi",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "country": "India",
+      "pincode": "411057",
+      "latitude": 18.5204,
+      "longitude": 73.8567
+    },
+    {
+      "name": "Startup Space Hyderabad",
+      "address": "654 HITEC City, Madhapur",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "country": "India",
+      "pincode": "500081",
+      "latitude": 17.3850,
+      "longitude": 78.4867
+    }
+  ],
+  "workspaces": [
+    {
+      "hub_name": "Tech Hub Downtown",
+      "name": "Conference Room A",
+      "type": "meeting_room",
+      "capacity": 10,
+      "base_price": 500,
+      "amenities": ["Wi-Fi", "AC", "Projector", "Whiteboard", "Coffee"]
+    },
+    {
+      "hub_name": "Tech Hub Downtown",
+      "name": "Private Cabin 1",
+      "type": "cabin",
+      "capacity": 2,
+      "base_price": 300,
+      "amenities": ["Wi-Fi", "AC", "Ergonomic Chair"]
+    },
+    {
+      "hub_name": "Tech Hub Downtown",
+      "name": "Hot Desk Area",
+      "type": "hotdesk",
+      "capacity": 20,
+      "base_price": 150,
+      "amenities": ["Wi-Fi", "AC", "Coffee", "Printer"]
+    },
+    {
+      "hub_name": "Creative Workspace Bangalore",
+      "name": "Executive Suite",
+      "type": "conference",
+      "capacity": 25,
+      "base_price": 1200,
+      "amenities": ["Wi-Fi", "AC", "Projector", "Video Conferencing", "Catering", "Whiteboard"]
+    },
+    {
+      "hub_name": "Creative Workspace Bangalore",
+      "name": "Collaboration Zone",
+      "type": "meeting_room",
+      "capacity": 8,
+      "base_price": 450,
+      "amenities": ["Wi-Fi", "AC", "Whiteboard", "TV Display"]
+    },
+    {
+      "hub_name": "Business Center Delhi",
+      "name": "Board Room",
+      "type": "conference",
+      "capacity": 30,
+      "base_price": 1500,
+      "amenities": ["Wi-Fi", "AC", "Projector", "Video Conferencing", "Catering", "Parking"]
+    },
+    {
+      "hub_name": "Business Center Delhi",
+      "name": "Focus Pod 1",
+      "type": "cabin",
+      "capacity": 1,
+      "base_price": 200,
+      "amenities": ["Wi-Fi", "AC", "Standing Desk"]
+    },
+    {
+      "hub_name": "Innovation Hub Pune",
+      "name": "Team Room B",
+      "type": "meeting_room",
+      "capacity": 12,
+      "base_price": 600,
+      "amenities": ["Wi-Fi", "AC", "Projector", "Whiteboard", "Coffee", "Snacks"]
+    },
+    {
+      "hub_name": "Innovation Hub Pune",
+      "name": "Open Workspace",
+      "type": "hotdesk",
+      "capacity": 30,
+      "base_price": 120,
+      "amenities": ["Wi-Fi", "AC", "Coffee", "Printer", "Scanner"]
+    },
+    {
+      "hub_name": "Startup Space Hyderabad",
+      "name": "Meeting Room C",
+      "type": "meeting_room",
+      "capacity": 6,
+      "base_price": 400,
+      "amenities": ["Wi-Fi", "AC", "TV Display", "Whiteboard"]
+    },
+    {
+      "hub_name": "Startup Space Hyderabad",
+      "name": "Private Cabin 2",
+      "type": "cabin",
+      "capacity": 3,
+      "base_price": 350,
+      "amenities": ["Wi-Fi", "AC", "Ergonomic Chair", "Locker"]
+    },
+    {
+      "hub_name": "Startup Space Hyderabad",
+      "name": "Conference Hall",
+      "type": "conference",
+      "capacity": 40,
+      "base_price": 2000,
+      "amenities": ["Wi-Fi", "AC", "Projector", "Video Conferencing", "Catering", "Whiteboard", "Parking"]
+    }
+  ],
+  "resources": [
+    {
+      "workspace_name": "Conference Room A",
+      "name": "HD Projector",
+      "description": "High-definition projector with HDMI connectivity",
+      "price_per_slot": 100,
+      "quantity": 2
+    },
+    {
+      "workspace_name": "Conference Room A",
+      "name": "Wireless Microphone",
+      "description": "Professional wireless microphone system",
+      "price_per_slot": 150,
+      "quantity": 2
+    },
+    {
+      "workspace_name": "Executive Suite",
+      "name": "Catering Service",
+      "description": "Full catering service for meetings",
+      "price_per_slot": 500,
+      "quantity": 5
+    },
+    {
+      "workspace_name": "Executive Suite",
+      "name": "Video Conference Kit",
+      "description": "Professional video conferencing equipment",
+      "price_per_slot": 300,
+      "quantity": 1
+    },
+    {
+      "workspace_name": "Board Room",
+      "name": "Parking Pass",
+      "description": "Reserved parking space",
+      "price_per_slot": 50,
+      "quantity": 10
+    },
+    {
+      "workspace_name": "Board Room",
+      "name": "Flip Chart",
+      "description": "Professional flip chart with markers",
+      "price_per_slot": 75,
+      "quantity": 3
+    },
+    {
+      "workspace_name": "Hot Desk Area",
+      "name": "Locker",
+      "description": "Secure personal locker",
+      "price_per_slot": 30,
+      "quantity": 20
+    },
+    {
+      "workspace_name": "Hot Desk Area",
+      "name": "Power Bank",
+      "description": "Portable power bank rental",
+      "price_per_slot": 20,
+      "quantity": 15
+    },
+    {
+      "workspace_name": "Team Room B",
+      "name": "Snack Package",
+      "description": "Refreshments and snacks package",
+      "price_per_slot": 200,
+      "quantity": 10
+    },
+    {
+      "workspace_name": "Conference Hall",
+      "name": "Sound System",
+      "description": "Professional audio system",
+      "price_per_slot": 400,
+      "quantity": 1
+    }
+  ],
+  "pricing_rules": [
+    {
+      "workspace_name": "Conference Room A",
+      "rule_type": "peak_hours",
+      "percentage_modifier": 20,
+      "flat_modifier": 0,
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "days": ["Mon", "Tue", "Wed", "Thu", "Fri"]
+    },
+    {
+      "workspace_name": "Executive Suite",
+      "rule_type": "weekend",
+      "percentage_modifier": -15,
+      "flat_modifier": 0,
+      "start_time": null,
+      "end_time": null,
+      "days": ["Sat", "Sun"]
+    },
+    {
+      "workspace_name": "Board Room",
+      "rule_type": "peak_hours",
+      "percentage_modifier": 25,
+      "flat_modifier": 100,
+      "start_time": "10:00",
+      "end_time": "16:00",
+      "days": ["Mon", "Tue", "Wed", "Thu", "Fri"]
+    },
+    {
+      "workspace_name": "Hot Desk Area",
+      "rule_type": "demand",
+      "percentage_modifier": 10,
+      "flat_modifier": 0,
+      "start_time": null,
+      "end_time": null,
+      "days": []
+    },
+    {
+      "workspace_name": "Conference Hall",
+      "rule_type": "weekend",
+      "percentage_modifier": -20,
+      "flat_modifier": -200,
+      "start_time": null,
+      "end_time": null,
+      "days": ["Sat", "Sun"]
+    }
+  ],
+  "sample_bookings": [
+    {
+      "workspace_name": "Conference Room A",
+      "user_name": "Rahul Sharma",
+      "start_time": "2025-11-16T10:00:00",
+      "end_time": "2025-11-16T12:00:00",
+      "booking_type": "hourly",
+      "status": "confirmed"
+    },
+    {
+      "workspace_name": "Private Cabin 1",
+      "user_name": "Priya Patel",
+      "start_time": "2025-11-17T09:00:00",
+      "end_time": "2025-11-17T17:00:00",
+      "booking_type": "daily",
+      "status": "confirmed"
+    },
+    {
+      "workspace_name": "Executive Suite",
+      "user_name": "Amit Kumar",
+      "start_time": "2025-11-18T14:00:00",
+      "end_time": "2025-11-18T18:00:00",
+      "booking_type": "hourly",
+      "status": "confirmed"
+    },
+    {
+      "workspace_name": "Board Room",
+      "user_name": "Sneha Reddy",
+      "start_time": "2025-11-20T11:00:00",
+      "end_time": "2025-11-20T15:00:00",
+      "booking_type": "hourly",
+      "status": "checked_in"
+    },
+    {
+      "workspace_name": "Hot Desk Area",
+      "user_name": "Vikram Singh",
+      "start_time": "2025-11-15T09:00:00",
+      "end_time": "2025-11-15T17:00:00",
+      "booking_type": "daily",
+      "status": "checked_in"
+    }
+  ]
+}
