@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Rule Form - WorkSpace Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1 id="page-title"><i class="fas fa-tags"></i> Add Pricing Rule</h1>
+            <a href="pricing-rules-list.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Rules
+            </a>
+        </header>
+        <div class="admin-content">
+            <div class="card" style="max-width:720px;">
+                <div class="card-header">
+                    <h2 id="form-heading">Pricing Rule Details</h2>
+                </div>
+                <div class="card-body">
+                    <form id="pricing-rule-form" novalidate>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="name">Rule Name <span style="color:var(--danger)">*</span></label>
+                                <input type="text" id="name" placeholder="e.g. Weekend Surge"
+                                    data-validate="required|minlen:3" data-label="Rule Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="rule-type">Rule Type <span style="color:var(--danger)">*</span></label>
+                                <select id="rule-type" data-validate="required" data-label="Rule Type">
+                                    <option value="">-- Select Type --</option>
+                                    <option value="peak_hours">Peak Hours</option>
+                                    <option value="weekend">Weekend</option>
+                                    <option value="bulk">Bulk Discount</option>
+                                    <option value="early_bird">Early Bird</option>
+                                    <option value="occupancy">Occupancy Based</option>
+                                    <option value="rating">Rating Based</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="modifier-percent">Modifier (%) <span style="color:var(--danger)">*</span></label>
+                                <input type="number" id="modifier-percent" step="0.1"
+                                    placeholder="e.g. 15 for +15%, -10 for discount"
+                                    data-validate="required" data-label="Modifier">
+                                <span class="form-hint">Positive = surcharge, Negative = discount</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="is-active">Status</label>
+                                <select id="is-active">
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="form-group full">
+                                <label for="description">Description</label>
+                                <textarea id="description" placeholder="Explain when this rule applies"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="start-hour">Applies From (Hour)</label>
+                                <input type="number" id="start-hour" min="0" max="23" placeholder="e.g. 9">
+                                <span class="form-hint">24h format, optional</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="end-hour">Applies Until (Hour)</label>
+                                <input type="number" id="end-hour" min="0" max="23" placeholder="e.g. 17">
+                            </div>
+                        </div>
+
+                        <div id="form-error" class="alert alert-error" style="display:none;margin-top:1rem;"></div>
+
+                        <div class="form-actions">
+                            <a href="pricing-rules-list.html" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary" id="submit-btn">
+                                <i class="fas fa-save"></i> Save Rule
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/admin-layout.js"></script>
+    <script src="js/pricing-rule-form.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - WorkSpace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="home.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+                    <i class="fas fa-building"></i><span>WorkSpace</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="search-hubs.html">Find Spaces</a></li>
+                <li><a href="my-bookings.html" class="active">My Bookings</a></li>
+                <li><a href="transactions.html">Transactions</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>My Bookings</h1>
+            <p>View and manage your workspace bookings</p>
+        </div>
+
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search-bookings" placeholder="Search by name or email..."
+                oninput="filterBookings()">
+            <button class="btn-secondary" onclick="loadBookings()">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+        </div>
+
+        <!-- Status filter -->
+        <div style="display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+            <button class="filter-btn active" data-status="" onclick="setStatusFilter(this)">All</button>
+            <button class="filter-btn" data-status="confirmed" onclick="setStatusFilter(this)">Confirmed</button>
+            <button class="filter-btn" data-status="checked_in" onclick="setStatusFilter(this)">Checked In</button>
+            <button class="filter-btn" data-status="completed" onclick="setStatusFilter(this)">Completed</button>
+            <button class="filter-btn" data-status="cancelled" onclick="setStatusFilter(this)">Cancelled</button>
+        </div>
+
+        <div id="bookings-list" class="bookings-list">
+            <div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Loading bookings...</p></div>
+        </div>
+    </div>
+
+    <style>
+        .filter-btn {
+            padding: .4rem 1rem; border: 1px solid var(--border); border-radius: 20px;
+            background: white; cursor: pointer; font-size: .875rem; transition: all .2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent); color: white; border-color: var(--accent);
+        }
+    </style>
+
+    <script src="js/config.js"></script>
+    <script src="js/my-bookings.js"></script>
+</body>
+</html>

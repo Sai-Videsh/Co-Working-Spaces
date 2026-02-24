@@ -145,7 +145,7 @@ calculateDynamicPrice(workspace_id, base_price, start_time, end_time, booking_ty
 **Logic**:
 - Base price calculation (hourly/daily/monthly)
 - Workday premium (+8%): Monday-Friday bookings
-- Occupancy surcharge (+15%): When >70% of hub workspaces booked
+- Occupancy surcharge (+5%): When >70% of hub workspaces booked
 - Rating premium (+5%): Workspaces with avg rating ≥4.0
 - Custom pricing rules from database
 
@@ -154,7 +154,7 @@ calculateDynamicPrice(workspace_id, base_price, start_time, end_time, booking_ty
 1. Get total available workspaces in hub
 2. Count unique workspaces with overlapping bookings
 3. Occupancy Rate = (booked_workspaces / total_workspaces) × 100
-4. If > 70%, apply +15% surcharge
+4. If > 70%, apply +5% surcharge
 ```
 
 **2. Availability Checker**
@@ -233,7 +233,7 @@ POST /api/pricing/calculate
     │
     ├─ Calculate base price (hourly/daily/monthly)
     ├─ Check workday (Mon-Fri) → +8%
-    ├─ Check hub occupancy → +15% if >70%
+    ├─ Check hub occupancy → +5% if >70%
     ├─ Check workspace rating → +5% if ≥4.0
     │
     ▼
@@ -291,7 +291,7 @@ Apply Occupancy Modifier
     │
     ├─ Query: Count booked workspaces in hub
     ├─ Calculate: (booked / total) × 100
-    └─ Add 15% if > 70%
+    └─ Add 5% if > 70%
     │
     ▼
 Apply Rating Modifier

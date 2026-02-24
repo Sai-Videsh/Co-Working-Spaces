@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings - WorkSpace Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1><i class="fas fa-calendar-check"></i> Bookings</h1>
+        </header>
+        <div class="admin-content">
+            <div class="toolbar">
+                <div class="toolbar-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search" placeholder="Search by name or email..." oninput="filterBookings()">
+                </div>
+                <div class="toolbar-filter">
+                    <select id="filter-status" onchange="filterBookings()">
+                        <option value="">All Statuses</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="checked_in">Checked In</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="toolbar-filter">
+                    <select id="filter-hub" onchange="filterBookings()">
+                        <option value="">All Hubs</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th><th>Guest</th><th>Workspace</th><th>Hub</th>
+                                    <th>Start</th><th>End</th><th>Total</th><th>Status</th><th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookings-table">
+                                <tr><td colspan="9" style="text-align:center;">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading…
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/admin-layout.js"></script>
+    <script src="js/bookings-list.js"></script>
+</body>
+</html>

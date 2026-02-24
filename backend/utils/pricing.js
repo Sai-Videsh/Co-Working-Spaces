@@ -35,7 +35,7 @@ async function calculateDynamicPrice(workspace_id, base_price, start_time, end_t
       calculatedPrice += workdayIncrease;
     }
 
-    // 2. OCCUPANCY-BASED PRICING (>70% of total workspaces booked +15%)
+    // 2. OCCUPANCY-BASED PRICING (>70% of total workspaces booked +5%)
     // Get the hub_id for this workspace
     const { data: workspace } = await supabase
       .from('workspaces')
@@ -66,7 +66,7 @@ async function calculateDynamicPrice(workspace_id, base_price, start_time, end_t
     const occupancyRate = (bookedWorkspaces / totalWorkspaces) * 100;
 
     if (occupancyRate > 70) {
-      const occupancyIncrease = calculatedPrice * 0.15; // 15% increase
+      const occupancyIncrease = calculatedPrice * 0.05; // 5% increase
       priceModifiers.occupancy = occupancyIncrease;
       calculatedPrice += occupancyIncrease;
     }

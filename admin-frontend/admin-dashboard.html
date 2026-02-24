@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - WorkSpace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+            <span style="color:var(--text-light);font-size:.9rem;" id="last-updated"></span>
+        </header>
+        <div class="admin-content">
+            <!-- Stats -->
+            <div class="stats-row" id="stats-row">
+                <div class="loading"><i class="fas fa-spinner fa-spin"></i></div>
+            </div>
+
+            <!-- Recent Bookings -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-calendar-check"></i> Recent Bookings</h2>
+                    <a href="bookings-list.html" class="btn btn-secondary btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th><th>Guest</th><th>Workspace</th>
+                                    <th>Start</th><th>Total</th><th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-bookings">
+                                <tr><td colspan="6" style="text-align:center;">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading…
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hub Overview -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-building"></i> Hub Overview</h2>
+                    <a href="hubs-list.html" class="btn btn-secondary btn-sm">Manage Hubs</a>
+                </div>
+                <div class="card-body">
+                    <div id="hub-overview" class="loading"><i class="fas fa-spinner fa-spin"></i></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/admin-layout.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

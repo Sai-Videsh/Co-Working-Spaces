@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workspace Form - WorkSpace Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <main class="admin-main">
+        <header class="admin-header">
+            <h1 id="page-title"><i class="fas fa-couch"></i> Add Workspace</h1>
+            <a href="workspaces-list.html" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Workspaces
+            </a>
+        </header>
+        <div class="admin-content">
+            <div class="card" style="max-width:860px;">
+                <div class="card-header">
+                    <h2 id="form-heading">Workspace Details</h2>
+                </div>
+                <div class="card-body">
+                    <form id="workspace-form" novalidate>
+                        <div class="form-grid">
+                            <div class="form-group full">
+                                <label for="hub-id">Hub <span style="color:var(--danger)">*</span></label>
+                                <select id="hub-id" data-validate="required" data-label="Hub">
+                                    <option value="">-- Select Hub --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Workspace Name <span style="color:var(--danger)">*</span></label>
+                                <input type="text" id="name" placeholder="e.g. Conference Room A"
+                                    data-validate="required|minlen:2" data-label="Workspace Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="type">Type <span style="color:var(--danger)">*</span></label>
+                                <select id="type" data-validate="required" data-label="Type">
+                                    <option value="">-- Select Type --</option>
+                                    <option value="hotdesk">Hot Desk</option>
+                                    <option value="cabin">Private Cabin</option>
+                                    <option value="meeting_room">Meeting Room</option>
+                                    <option value="conference">Conference Hall</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="capacity">Capacity (people) <span style="color:var(--danger)">*</span></label>
+                                <input type="number" id="capacity" min="1" placeholder="e.g. 10"
+                                    data-validate="required|min:1" data-label="Capacity">
+                            </div>
+                            <div class="form-group">
+                                <label for="base-price">Base Price (₹/hr) <span style="color:var(--danger)">*</span></label>
+                                <input type="number" id="base-price" min="1" placeholder="e.g. 500"
+                                    data-validate="required|min:1" data-label="Base Price">
+                            </div>
+                            <div class="form-group full">
+                                <label for="amenities">Amenities</label>
+                                <input type="text" id="amenities" placeholder="Wi-Fi, AC, Projector (comma separated)">
+                                <span class="form-hint">Separate multiple amenities with commas</span>
+                            </div>
+                            <div class="form-group full">
+                                <label for="description">Description</label>
+                                <textarea id="description" placeholder="Brief description of this workspace"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="is-available">Availability</label>
+                                <select id="is-available">
+                                    <option value="true">Available</option>
+                                    <option value="false">Unavailable</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="form-error" class="alert alert-error" style="display:none;margin-top:1rem;"></div>
+
+                        <div class="form-actions">
+                            <a href="workspaces-list.html" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary" id="submit-btn">
+                                <i class="fas fa-save"></i> Save Workspace
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/admin-layout.js"></script>
+    <script src="js/workspace-form.js"></script>
+</body>
+</html>

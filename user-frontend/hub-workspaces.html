@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub Workspaces - WorkSpace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="home.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:10px;">
+                    <i class="fas fa-building"></i><span>WorkSpace</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="search-hubs.html" class="active">Find Spaces</a></li>
+                <li><a href="my-bookings.html">My Bookings</a></li>
+                <li><a href="transactions.html">Transactions</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb" style="margin-top:1.5rem;">
+            <a href="search-hubs.html"><i class="fas fa-arrow-left"></i> Back to Hubs</a>
+        </div>
+
+        <!-- Hub Info Header -->
+        <div class="hub-header">
+            <div class="hub-header-info">
+                <h2 id="hub-name">Loading...</h2>
+                <p id="hub-address"></p>
+            </div>
+            <a href="search-hubs.html" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> All Hubs
+            </a>
+        </div>
+
+        <!-- Filters -->
+        <div class="search-filters">
+            <div class="filter-group">
+                <label>Workspace Type</label>
+                <select id="filter-type" onchange="filterWorkspaces()">
+                    <option value="">All Types</option>
+                    <option value="hotdesk">Hot Desk</option>
+                    <option value="cabin">Private Cabin</option>
+                    <option value="meeting_room">Meeting Room</option>
+                    <option value="conference">Conference Hall</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Capacity</label>
+                <select id="filter-capacity" onchange="filterWorkspaces()">
+                    <option value="">Any</option>
+                    <option value="1-5">1-5 people</option>
+                    <option value="6-10">6-10 people</option>
+                    <option value="11-20">11-20 people</option>
+                    <option value="21+">21+ people</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Availability</label>
+                <select id="filter-availability" onchange="filterWorkspaces()">
+                    <option value="">All</option>
+                    <option value="available">Available Only</option>
+                    <option value="unavailable">Unavailable</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Sort By</label>
+                <select id="sort-by" onchange="filterWorkspaces()">
+                    <option value="">Default</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="capacity-low">Capacity: Low to High</option>
+                    <option value="capacity-high">Capacity: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="workspaces-grid" class="workspaces-grid">
+            <div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Loading workspaces...</p></div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/hub-workspaces.js"></script>
+</body>
+</html>
