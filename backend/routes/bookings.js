@@ -3,12 +3,13 @@ const router = express.Router();
 const { supabase } = require('../config/supabase');
 const { calculateDynamicPrice } = require('../utils/pricing');
 const { authenticateToken } = require('../middleware/auth');
+const { validate, rules } = require('../middleware/validate');
 
 // Get current user's bookings (protected)
 router.get('/my', authenticateToken, async (req, res) => {
   try {
     const { status } = req.query;
-    const userName = req.user.name;
+    const userEmail = req.user.email;
 
     let query = supabase
       .from('bookings')
@@ -24,7 +25,7 @@ router.get('/my', authenticateToken, async (req, res) => {
           )
         )
       `)
-      .eq('user_name', userName)
+      .eq('user_email', userEmail)
       .order('created_at', { ascending: false });
 
     if (status) query = query.eq('status', status);
@@ -132,13 +133,31 @@ router.post('/', authenticateToken, async (req, res) => {
     const user_name  = tokenUser.name;
     const user_email = tokenUser.email;
 
-    // Validate required fields
-    if (!workspace_id || !user_name || !start_time || !end_time) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields'
-      });
+    // Server-side validation
+    const err = validate(req.body, {
+      workspace_id:  [rules.required, rules.positiveInt],
+      start_time:    [rules.required, rules.isoDate, rules.futureDate, rules.maxFutureDays(90)],
+      end_time:      [rules.required, rules.isoDate, rules.after('start_time'), rules.maxDuration(720)],
+      booking_type:  [rules.oneOf(['hourly', 'daily', 'monthly'])],
+    });
+    if (err) return res.status(400).json({ success: false, error: err });
+
+    // Validate resources array items if provided
+    if (resources && !Array.isArray(resources)) {
+      return res.status(400).json({ success: false, error: 'resources must be an array' });
     }
+    if (Array.isArray(resources)) {
+      for (const r of resources) {
+        if (!Number.isInteger(Number(r.resource_id)) || Number(r.resource_id) < 1)
+          return res.status(400).json({ success: false, error: 'Each resource must have a valid resource_id' });
+        if (!Number.isInteger(Number(r.quantity)) || Number(r.quantity) < 1 || Number(r.quantity) > 99)
+          return res.status(400).json({ success: false, error: 'Resource quantity must be between 1 and 99' });
+      }
+    }
+
+    // Ignore any client-supplied total_price above a sanity ceiling (backend recalculates anyway)
+    const sanitisedPrice = (total_price !== undefined && Number.isFinite(Number(total_price)) && Number(total_price) > 0)
+      ? Number(total_price) : undefined;
 
     // Get workspace details to validate it exists
     const { data: workspace, error: workspaceError } = await supabase
@@ -155,20 +174,15 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     // Use provided total_price or calculate if not provided
-    let finalPrice = total_price;
+    let finalPrice = sanitisedPrice;
 
     if (!finalPrice) {
-      // Calculate duration in hours
-      const start = new Date(start_time);
-      const end = new Date(end_time);
-      const durationHours = (end - start) / (1000 * 60 * 60);
-
-      // Calculate dynamic price
+      // Calculate dynamic price (pass end_time as date string, not duration in hours)
       const dynamicPrice = await calculateDynamicPrice(
         workspace_id,
         workspace.base_price,
         start_time,
-        durationHours,
+        end_time,
         booking_type
       );
 
@@ -217,6 +231,7 @@ router.post('/', authenticateToken, async (req, res) => {
       .insert([{
         workspace_id,
         user_name,
+        user_email,
         start_time,
         end_time,
         total_price: finalPrice,
@@ -260,15 +275,36 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
-// Update booking status
-router.patch('/:id/status', async (req, res) => {
+// Update booking status (auth required – only the booking owner can cancel)
+router.patch('/:id/status', authenticateToken, async (req, res) => {
   try {
     const { status } = req.body;
+    const bookingId = req.params.id;
+
+    // Verify the booking belongs to the requesting user
+    const { data: existing, error: fetchErr } = await supabase
+      .from('bookings')
+      .select('id, user_email, status')
+      .eq('id', bookingId)
+      .single();
+
+    if (fetchErr || !existing) {
+      return res.status(404).json({ success: false, error: 'Booking not found' });
+    }
+
+    if (existing.user_email !== req.user.email) {
+      return res.status(403).json({ success: false, error: 'Not authorized to modify this booking' });
+    }
+
+    // Only allow cancellation of active bookings
+    if (status === 'cancelled' && !['confirmed', 'checked_in'].includes(existing.status)) {
+      return res.status(400).json({ success: false, error: 'Only confirmed or checked-in bookings can be cancelled' });
+    }
 
     const { data, error } = await supabase
       .from('bookings')
       .update({ status })
-      .eq('id', req.params.id)
+      .eq('id', bookingId)
       .select();
 
     if (error) throw error;

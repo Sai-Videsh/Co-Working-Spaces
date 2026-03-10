@@ -34,7 +34,7 @@ async function loadResources(wsId) {
     container.innerHTML = loadingHTML('Loading resources...');
 
     try {
-        const res = await fetch(`${API_URL}/resources?workspace_id=${wsId}`);
+        const res = await fetch(`${API_URL}/resources/workspace/${wsId}`);
         allResources = (await res.json()).data || [];
 
         if (!allResources.length) {

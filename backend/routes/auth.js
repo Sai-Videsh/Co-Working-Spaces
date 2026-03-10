@@ -4,6 +4,7 @@ const { supabase } = require('../config/supabase');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { authenticateToken, JWT_SECRET, JWT_EXPIRES_IN } = require('../middleware/auth');
+const { validate, rules, str } = require('../middleware/validate');
 const saltRounds = 10;
 
 // Register new user
@@ -11,13 +12,14 @@ router.post('/register', async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
 
-    // Validate input
-    if (!name || !email || !password) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Name, email, and password are required' 
-      });
-    }
+    // Validate & sanitise all inputs
+    const err = validate(req.body, {
+      name:     [rules.required, rules.string, rules.minLen(2), rules.maxLen(100), rules.noScript],
+      email:    [rules.required, rules.email, rules.maxLen(255)],
+      password: [rules.required, rules.minLen(8), rules.maxLen(128)],
+      phone:    [rules.phone],
+    });
+    if (err) return res.status(400).json({ success: false, error: err });
 
     // Check if user already exists
     const { data: existingUser, error: checkError } = await supabase
@@ -80,13 +82,11 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
-    if (!email || !password) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Email and password are required' 
-      });
-    }
+    const err = validate(req.body, {
+      email:    [rules.required, rules.email, rules.maxLen(255)],
+      password: [rules.required, rules.maxLen(128)],
+    });
+    if (err) return res.status(400).json({ success: false, error: err });
 
     // Find user by email
     const { data: user, error } = await supabase
