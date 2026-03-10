@@ -1267,3 +1267,46 @@ body {
     cursor: not-allowed;
     transform: none;
 }
+
+/* ── Print Styles for Success Modal ─────────────────────────── */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    #success-modal,
+    #success-modal * {
+        visibility: visible;
+    }
+    
+    #success-modal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+    }
+    
+    #success-modal .modal-content {
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+    }
+    
+    /* Hide modal background overlay when printing */
+    .modal::before {
+        display: none;
+    }
+    
+    /* Hide buttons when printing */
+    #success-modal button {
+        display: none !important;
+    }
+    
+    /* Ensure QR code is visible and large enough */
+    #qr-code-container img {
+        max-width: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+}

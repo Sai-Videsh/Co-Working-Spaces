@@ -78,7 +78,7 @@ function displayWorkspaces(workspaces) {
                     ${(ws.amenities || []).map(a => `<span class="amenity-tag">${a}</span>`).join('')}
                 </div>
                 <div class="workspace-footer">
-                    <div class="price">₹${ws.base_price} <span>/hr</span></div>
+                    <div class="price">₹${parseFloat(ws.base_price).toFixed(2)} <span>/hr</span></div>
                     <div style="display:flex;gap:.5rem;">
                         <a href="workspace-details.html?workspace_id=${ws.id}&hub_id=${getParam('hub_id')}"
                             class="btn-secondary btn-sm"><i class="fas fa-eye"></i> Details</a>

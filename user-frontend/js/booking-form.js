@@ -50,7 +50,7 @@ async function loadWorkspace(wsId, hubId) {
                 </div>
                 <div style="text-align:right;">
                     <div style="font-size:1.5rem;font-weight:700;color:var(--primary);">
-                        ₹${currentWorkspace.base_price}<span style="font-size:.875rem;font-weight:400;color:var(--text-light);">/hr</span>
+                        ₹${parseFloat(currentWorkspace.base_price).toFixed(2)}<span style="font-size:.875rem;font-weight:400;color:var(--text-light);">/hr</span>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@ async function loadResources(wsId) {
                     <p>${r.description || ''}</p>
                 </div>
                 <div class="resource-select">
-                    <span class="resource-price">₹${r.price_per_slot}/hr</span>
+                    <span class="resource-price">₹${parseFloat(r.price_per_slot).toFixed(2)}/hr</span>
                     <div style="display:flex;align-items:center;gap:.5rem;">
                         <input type="number" id="qty-${r.id}" min="0" value="0"
                             style="width:60px;padding:.25rem;border:1px solid var(--border);border-radius:4px;text-align:center;"
@@ -122,9 +122,9 @@ async function updatePricing() {
         const base = currentWorkspace.base_price;
         const res  = selectedResources.reduce((s, r) => s + r.price * r.quantity, 0);
         summary.innerHTML = `
-            <div class="price-row"><span>Base Price:</span><span>₹${base}</span></div>
-            <div class="price-row"><span>Resources:</span><span>₹${res}</span></div>
-            <div class="price-row total"><span>Total:</span><span id="total-price">₹${base + res}</span></div>`;
+            <div class="price-row"><span>Base Price:</span><span>₹${parseFloat(base).toFixed(2)}</span></div>
+            <div class="price-row"><span>Resources:</span><span>₹${parseFloat(res).toFixed(2)}</span></div>
+            <div class="price-row total"><span>Total:</span><span id="total-price">₹${parseFloat(base + res).toFixed(2)}</span></div>`;
         return;
     }
 
@@ -163,7 +163,7 @@ async function updatePricing() {
             </h3>
             <div class="price-row">
                 <span>Base Price (${pricing.hours || 0} hours):</span>
-                <span>₹${pricing.breakdown.base}</span>
+                <span>₹${parseFloat(pricing.breakdown.base).toFixed(2)}</span>
             </div>`;
 
         // Dynamic modifiers
@@ -213,7 +213,7 @@ async function updatePricing() {
                 const rTotal = r.price * r.quantity * hours;
                 html += `<div class="price-row" style="font-size:.875rem;margin-left:1rem;">
                     <span>${r.name}
-                        <span style="color:var(--text-light);">(${r.quantity} × ₹${r.price} × ${hours.toFixed(1)}h)</span>
+                        <span style="color:var(--text-light);">(${r.quantity} × ₹${parseFloat(r.price).toFixed(2)} × ${hours.toFixed(2)}h)</span>
                     </span>
                     <span>₹${rTotal.toFixed(2)}</span>
                 </div>`;
@@ -234,9 +234,9 @@ async function updatePricing() {
         const base = currentWorkspace.base_price;
         const res  = selectedResources.reduce((s, r) => s + r.price * r.quantity, 0);
         summary.innerHTML = `
-            <div class="price-row"><span>Base Price:</span><span id="base-price">₹${base}</span></div>
-            <div class="price-row"><span>Resources:</span><span id="resources-price">₹${res}</span></div>
-            <div class="price-row total"><span>Total:</span><span id="total-price">₹${base + res}</span></div>`;
+            <div class="price-row"><span>Base Price:</span><span id="base-price">₹${parseFloat(base).toFixed(2)}</span></div>
+            <div class="price-row"><span>Resources:</span><span id="resources-price">₹${parseFloat(res).toFixed(2)}</span></div>
+            <div class="price-row total"><span>Total:</span><span id="total-price">₹${parseFloat(base + res).toFixed(2)}</span></div>`;
     }
 }
 

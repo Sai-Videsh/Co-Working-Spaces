@@ -50,7 +50,7 @@ async function loadResources(wsId) {
                             <p>${r.description || ''}</p>
                             <div style="margin-top:.5rem;font-size:.875rem;color:var(--text-light);">
                                 <i class="fas fa-tag" style="color:var(--accent);"></i>
-                                ₹${r.price_per_slot} per slot/hour
+                                ₹${parseFloat(r.price_per_slot).toFixed(2)} per slot/hour
                             </div>
                         </div>
                         <div class="resource-select">

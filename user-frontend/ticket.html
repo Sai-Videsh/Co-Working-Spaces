@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Ticket - WorkSpace</title>
+    <title>Transaction Ticket - WorkSpace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -30,7 +30,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: #f8f9fa;
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
         }
 
         .ticket-container {
@@ -40,18 +40,46 @@
             box-shadow: 0 2px 10px var(--shadow);
             margin: 0 auto;
             border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .qr-corner {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            padding: 0.3rem;
+            border: 2px solid var(--accent);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .qr-corner img {
+            display: block;
+            width: 80px;
+            height: 80px;
+        }
+
+        .qr-corner-label {
+            text-align: center;
+            font-size: 0.6rem;
+            color: var(--text);
+            font-weight: 600;
+            margin-top: 0.2rem;
+            text-transform: uppercase;
         }
 
         .ticket-header {
             background: var(--primary);
             color: white;
-            padding: 2rem;
+            padding: 1.2rem 1.5rem;
             border-bottom: 3px solid var(--accent);
+            position: relative;
         }
 
         .ticket-header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
             font-weight: 700;
             letter-spacing: 1px;
         }
@@ -66,23 +94,23 @@
 
         .status-badge {
             display: inline-block;
-            padding: 0.4rem 1rem;
+            padding: 0.3rem 0.8rem;
             background: var(--success);
             color: white;
             font-weight: 600;
-            margin-top: 1rem;
-            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .ticket-body {
-            padding: 2rem;
+            padding: 1.2rem 1.5rem;
         }
 
         .section {
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
             border-bottom: 1px solid var(--border);
         }
 
@@ -92,16 +120,16 @@
         }
 
         .section-title {
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 1rem;
+            margin-bottom: 0.6rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.3rem;
             border-bottom: 2px solid var(--accent);
         }
 
@@ -111,65 +139,66 @@
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-top: 0.5rem;
         }
 
         .info-item {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.3rem;
         }
 
         .info-label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-light);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             font-weight: 600;
         }
 
         .info-value {
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: var(--text);
             font-weight: 600;
         }
 
         .info-value.large {
-            font-size: 1.25rem;
+            font-size: 1rem;
             color: var(--primary);
         }
 
         .amenities-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 0.3rem;
+            margin-top: 0.3rem;
         }
 
         .amenity-tag {
             background: var(--light);
             color: var(--text);
-            padding: 0.35rem 0.75rem;
-            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
             border: 1px solid var(--border);
             font-weight: 500;
         }
 
         .resources-list {
             background: var(--light);
-            padding: 1rem;
-            margin-top: 1rem;
+            padding: 0.6rem;
+            margin-top: 0.5rem;
             border-left: 3px solid var(--accent);
         }
 
         .resource-item {
-            padding: 0.75rem 0;
+            padding: 0.4rem 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
         }
 
         .resource-item:last-child {
@@ -179,17 +208,18 @@
 
         .price-breakdown {
             background: var(--light);
-            padding: 1.5rem;
-            margin-top: 1rem;
+            padding: 0.8rem;
+            margin-top: 0.5rem;
             border: 1px solid var(--border);
         }
 
         .price-row {
             display: flex;
             justify-content: space-between;
-            padding: 0.75rem 0;
+            padding: 0.4rem 0;
             border-bottom: 1px solid var(--border);
             font-weight: 500;
+            font-size: 0.85rem;
         }
 
         .price-row:last-child {
@@ -197,62 +227,34 @@
         }
 
         .price-row.total {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: var(--primary);
             border-top: 2px solid var(--primary);
-            padding-top: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .qr-section {
-            text-align: center;
-            padding: 2rem;
-            background: var(--light);
-            border: 1px solid var(--border);
-            margin-top: 1rem;
-        }
-
-        .qr-code {
-            background: white;
-            padding: 1rem;
-            display: inline-block;
-            border: 2px solid var(--border);
-        }
-
-        .qr-code img {
-            display: block;
-            max-width: 250px;
-            height: auto;
-        }
-
-        .qr-instruction {
-            margin-top: 1rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            font-weight: 500;
+            padding-top: 0.5rem;
+            margin-top: 0.3rem;
         }
 
         .ticket-footer {
             background: var(--primary);
             color: white;
-            padding: 1.5rem 2rem;
+            padding: 0.8rem 1.5rem;
             text-align: center;
             border-top: 3px solid var(--accent);
         }
 
         .ticket-footer p {
-            margin: 0.5rem 0;
+            margin: 0.25rem 0;
             opacity: 0.9;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
         }
 
         .action-buttons {
             display: flex;
             gap: 1rem;
             justify-content: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
             border-top: 1px solid var(--border);
         }
 
@@ -334,19 +336,46 @@
         }
 
         @media print {
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
+
             body {
                 background: white;
                 padding: 0;
+                margin: 0;
             }
 
             .ticket-container {
                 box-shadow: none;
                 border: none;
+                max-width: 100%;
+                page-break-after: avoid;
+            }
+
+            .section {
+                page-break-inside: avoid;
             }
 
             .action-buttons,
             .btn {
                 display: none !important;
+            }
+
+            .ticket-body {
+                padding: 0.8rem;
+            }
+
+            .qr-corner {
+                position: absolute;
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+
+            .qr-corner img {
+                width: 70px;
+                height: 70px;
             }
         }
 
@@ -366,6 +395,21 @@
             .btn {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .qr-corner {
+                top: 0.5rem;
+                right: 0.5rem;
+                padding: 0.2rem;
+            }
+
+            .qr-corner img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .qr-corner-label {
+                font-size: 0.5rem;
             }
         }
     </style>
@@ -423,35 +467,89 @@
 
             const startDate = new Date(booking.start_time);
             const endDate = new Date(booking.end_time);
+            const createdDate = new Date(booking.created_at);
+
+            // Generate transaction ID if not present
+            let transactionId = booking.transaction_id;
+            if (!transactionId && booking.created_at) {
+                const dateStr = createdDate.toISOString().slice(0, 19).replace(/[-:T]/g, '').slice(0, 14);
+                transactionId = `TXN-${dateStr}`;
+            } else if (!transactionId) {
+                transactionId = `TXN-${booking.id}`;
+            }
 
             const ticketHTML = `
+                ${qrImage ? `
+                    <div class="qr-corner">
+                        <img src="${qrImage}" alt="QR Code" id="qr-image">
+                        <div class="qr-corner-label">Scan to Verify</div>
+                    </div>
+                ` : ''}
+                
                 <div class="ticket-header">
-                    <h1>BOOKING CONFIRMATION & ENTRY TICKET</h1>
-                    <div class="booking-id">BOOKING ID: #${booking.id}</div>
+                    <h1>TRANSACTION TICKET & BOOKING CONFIRMATION</h1>
+                    <div class="booking-id">Booking ID: BOOK-${booking.id} | Transaction ID: ${transactionId}</div>
                     <div class="status-badge">
                         ${booking.status.toUpperCase()}
                     </div>
                 </div>
 
                 <div class="ticket-body">
+                    <!-- Transaction Details -->
+                    <div class="section">
+                        <div class="section-title">
+                            <i class="fas fa-receipt"></i>
+                            Transaction Details
+                        </div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Transaction ID</div>
+                                <div class="info-value">${transactionId}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Booking ID</div>
+                                <div class="info-value">BOOK-${booking.id}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Transaction Date & Time</div>
+                                <div class="info-value">${createdDate.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                                <p style="color: var(--primary); margin-top: 0.25rem; font-size: 0.9rem; font-weight: 600;">
+                                    ${createdDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                                </p>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Payment Status</div>
+                                <div class="info-value" style="color: var(--success);">PAID</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Payment Method</div>
+                                <div class="info-value">Online Payment</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Booking Status</div>
+                                <div class="info-value" style="color: ${booking.status === 'confirmed' ? 'var(--success)' : 'var(--accent)'};">${booking.status.toUpperCase()}</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Guest Details -->
                     <div class="section">
                         <div class="section-title">
                             <i class="fas fa-user"></i>
-                            Guest Details
+                            Guest Information
                         </div>
                         <div class="info-grid">
                             <div class="info-item">
-                                <div class="info-label">Name</div>
+                                <div class="info-label">Full Name</div>
                                 <div class="info-value">${booking.user_name}</div>
                             </div>
                             <div class="info-item">
-                                <div class="info-label">Email</div>
-                                <div class="info-value">${booking.user_email || 'N/A'}</div>
+                                <div class="info-label">Email Address</div>
+                                <div class="info-value">${booking.user_email || 'Not Provided'}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Booking Type</div>
-                                <div class="info-value">${booking.booking_type.toUpperCase()}</div>
+                                <div class="info-value">${formatType(booking.booking_type)}</div>
                             </div>
                         </div>
                     </div>
@@ -460,12 +558,16 @@
                     <div class="section">
                         <div class="section-title">
                             <i class="fas fa-building"></i>
-                            Venue Details
+                            Venue & Workspace Details
                         </div>
                         <div class="info-grid">
                             <div class="info-item">
-                                <div class="info-label">Workspace</div>
+                                <div class="info-label">Workspace Name</div>
                                 <div class="info-value large">${workspace.name}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Workspace ID</div>
+                                <div class="info-value">#${workspace.id}</div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">Type</div>
@@ -475,22 +577,28 @@
                                 <div class="info-label">Capacity</div>
                                 <div class="info-value">${workspace.capacity} People</div>
                             </div>
-                        </div>
-                        <div class="info-grid" style="margin-top: 1.5rem;">
                             <div class="info-item">
-                                <div class="info-label">Location</div>
+                                <div class="info-label">Base Price</div>
+                                <div class="info-value">₹${parseFloat(workspace.base_price).toFixed(2)}/hour</div>
+                            </div>
+                        </div>
+                        <div class="info-grid" style="margin-top: 0.5rem;">
+                            <div class="info-item">
+                                <div class="info-label">Hub/Location Name</div>
                                 <div class="info-value">${hub.name}</div>
-                                <p style="color: var(--text-light); margin-top: 0.5rem; font-size: 0.9rem;">
-                                    ${hub.address}<br>
-                                    ${hub.city}, ${hub.state} - ${hub.pincode}
-                                </p>
+                            </div>
+                            <div class="info-item" style="grid-column: span 2;">
+                                <div class="info-label">Complete Address</div>
+                                <div class="info-value" style="font-size: 0.8rem;">
+                                    ${hub.address}, ${hub.city}, ${hub.state} - ${hub.pincode}
+                                </div>
                             </div>
                         </div>
                         ${workspace.amenities && workspace.amenities.length > 0 ? `
-                            <div style="margin-top: 1.5rem;">
-                                <div class="info-label" style="margin-bottom: 0.75rem;">Available Amenities</div>
+                            <div style="margin-top: 0.5rem;">
+                                <div class="info-label" style="margin-bottom: 0.4rem;">Available Amenities</div>
                                 <div class="amenities-list">
-                                    ${workspace.amenities.map(a => `<span class="amenity-tag">${a}</span>`).join('')}
+                                    ${workspace.amenities.map(a => `<span class="amenity-tag"><i class="fas fa-check"></i> ${a}</span>`).join('')}
                                 </div>
                             </div>
                         ` : ''}
@@ -500,26 +608,26 @@
                     <div class="section">
                         <div class="section-title">
                             <i class="fas fa-calendar-alt"></i>
-                            Booking Schedule
+                            Booking Schedule & Duration
                         </div>
                         <div class="info-grid">
                             <div class="info-item">
-                                <div class="info-label">Check-in</div>
+                                <div class="info-label">Check-in Date</div>
                                 <div class="info-value large">${startDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-                                <p style="color: var(--primary); margin-top: 0.5rem; font-size: 1rem; font-weight: 600;">
-                                    ${startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                                <p style="color: var(--primary); margin-top: 0.25rem; font-size: 0.85rem; font-weight: 600;">
+                                    <i class="fas fa-clock"></i> ${startDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                                 </p>
                             </div>
                             <div class="info-item">
-                                <div class="info-label">Check-out</div>
+                                <div class="info-label">Check-out Date</div>
                                 <div class="info-value large">${endDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
-                                <p style="color: var(--primary); margin-top: 0.5rem; font-size: 1rem; font-weight: 600;">
-                                    ${endDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                                <p style="color: var(--primary); margin-top: 0.25rem; font-size: 0.85rem; font-weight: 600;">
+                                    <i class="fas fa-clock"></i> ${endDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                                 </p>
                             </div>
                             <div class="info-item">
-                                <div class="info-label">Duration</div>
-                                <div class="info-value">${calculateDuration(startDate, endDate, booking.booking_type)}</div>
+                                <div class="info-label">Total Duration</div>
+                                <div class="info-value large">${calculateDuration(startDate, endDate, booking.booking_type)}</div>
                             </div>
                         </div>
                     </div>
@@ -528,16 +636,17 @@
                         <div class="section">
                             <div class="section-title">
                                 <i class="fas fa-plus-circle"></i>
-                                Additional Resources
+                                Additional Resources Selected
                             </div>
                             <div class="resources-list">
                                 ${resources.map(r => `
                                     <div class="resource-item">
                                         <div>
-                                            <strong>${r.name}</strong>
-                                            ${r.description ? `<p style="color: var(--text-light); font-size: 0.85rem; margin-top: 0.25rem;">${r.description}</p>` : ''}
+                                            <strong><i class="fas fa-cube"></i> ${r.name}</strong>
+                                            <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.2rem;">
+                                                Quantity: <strong>${r.quantity}</strong> | Rate: ₹${parseFloat(r.price_per_slot).toFixed(2)}/hour
+                                            </p>
                                         </div>
-                                        <div style="color: var(--accent); font-weight: 600;">₹${r.price_per_slot}/hr</div>
                                     </div>
                                 `).join('')}
                             </div>
@@ -547,39 +656,83 @@
                     <!-- Payment Summary -->
                     <div class="section">
                         <div class="section-title">
-                            <i class="fas fa-receipt"></i>
-                            Payment Summary
+                            <i class="fas fa-money-bill-wave"></i>
+                            Payment Summary & Breakdown
                         </div>
                         <div class="price-breakdown">
-                            <div class="price-row">
-                                <span>Booking Amount</span>
-                                <span>₹${booking.total_price.toFixed(2)}</span>
-                            </div>
-                            <div class="price-row total">
-                                <span>Total Paid</span>
-                                <span>₹${booking.total_price.toFixed(2)}</span>
+                            ${(() => {
+                                // Calculate duration in hours
+                                const durationMs = endDate - startDate;
+                                let hours = durationMs / (1000 * 60 * 60);
+                                
+                                // For daily bookings, use 8 hour chunks
+                                if (booking.booking_type === 'daily') {
+                                    const days = Math.ceil(hours / 24);
+                                    hours = days * 8;
+                                } else if (booking.booking_type === 'monthly') {
+                                    hours = 22 * 8; // ~22 working days × 8 hours
+                                }
+                                
+                                // Calculate base workspace cost
+                                const basePrice = workspace.base_price || 0;
+                                const baseTotal = basePrice * hours;
+                                
+                                // Calculate resources cost
+                                let resourcesTotal = 0;
+                                let resourcesBreakdown = '';
+                                
+                                if (resources.length > 0) {
+                                    resourcesBreakdown = resources.map(r => {
+                                        const resourceCost = (r.price_per_slot || 0) * (r.quantity || 1) * hours;
+                                        resourcesTotal += resourceCost;
+                                        return `
+                                            <div class="price-row" style="font-size: 0.85rem; margin-left: 1rem; color: var(--text-light);">
+                                                <span><i class="fas fa-cube"></i> ${r.name} <span style="font-size: 0.8rem;">(${r.quantity} × ₹${parseFloat(r.price_per_slot).toFixed(2)} × ${hours.toFixed(1)}h)</span></span>
+                                                <span>₹${resourceCost.toFixed(2)}</span>
+                                            </div>
+                                        `;
+                                    }).join('');
+                                }
+                                
+                                // Calculate if there's a discount (difference between expected total and actual total)
+                                const expectedTotal = baseTotal + resourcesTotal;
+                                const actualTotal = booking.total_price || 0;
+                                const discount = expectedTotal - actualTotal;
+                                const hasDiscount = discount > 0.01; // Account for rounding
+                                
+                                return `
+                                    <div class="price-row">
+                                        <span>Base Workspace Rate <span style="font-size: 0.85rem; color: var(--text-light);">(₹${parseFloat(basePrice).toFixed(2)}/hr × ${hours.toFixed(1)}h)</span></span>
+                                        <span>₹${baseTotal.toFixed(2)}</span>
+                                    </div>
+                                    ${resources.length > 0 ? `
+                                        <div class="price-row" style="margin-top: 0.5rem;">
+                                            <span><strong>Additional Resources:</strong></span>
+                                            <span><strong>₹${resourcesTotal.toFixed(2)}</strong></span>
+                                        </div>
+                                        ${resourcesBreakdown}
+                                    ` : ''}
+                                    ${hasDiscount ? `
+                                        <div class="price-row" style="margin-top: 0.5rem; padding: 0.5rem; background: #d4edda; border-left: 3px solid #28a745; border-radius: 4px;">
+                                            <span style="color: #155724;"><i class="fas fa-tag"></i> Discount Applied</span>
+                                            <span style="color: #28a745; font-weight: 600;">-₹${discount.toFixed(2)}</span>
+                                        </div>
+                                    ` : ''}
+                                    <div class="price-row">
+                                        <span>Tax & Service Charges</span>
+                                        <span>₹0.00</span>
+                                    </div>
+                                    <div class="price-row total">
+                                        <span>Total Amount Paid</span>
+                                        <span>₹${actualTotal.toFixed(2)}</span>
+                                    </div>
+                                `;
+                            })()}
+                            <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); color: var(--text-light); font-size: 0.7rem;">
+                                <i class="fas fa-info-circle"></i> Payment completed on ${createdDate.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })} at ${createdDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                             </div>
                         </div>
                     </div>
-
-                    <!-- QR Code -->
-                    ${qrImage ? `
-                        <div class="section">
-                            <div class="qr-section">
-                                <div class="section-title" style="justify-content: center;">
-                                    <i class="fas fa-qrcode"></i>
-                                    Entry QR Code
-                                </div>
-                                <div class="qr-code">
-                                    <img src="${qrImage}" alt="QR Code">
-                                </div>
-                                <div class="qr-instruction">
-                                    <i class="fas fa-info-circle"></i> 
-                                    Show this QR code at the venue for entry
-                                </div>
-                            </div>
-                        </div>
-                    ` : ''}
 
                     <!-- Actions -->
                     <div class="action-buttons">
@@ -587,19 +740,18 @@
                             <i class="fas fa-print"></i>
                             Print Ticket
                         </button>
-                        <button class="btn btn-secondary" onclick="downloadTicket()">
-                            <i class="fas fa-download"></i>
-                            Download PDF
-                        </button>
                     </div>
                 </div>
 
                 <div class="ticket-footer">
                     <p><strong>WorkSpace Co-Working Platform</strong></p>
-                    <p>For any queries, please contact support@workspace.com</p>
+                    <p><i class="fas fa-envelope"></i> support@workspace.com | <i class="fas fa-phone"></i> +91-XXXXXXXXXX</p>
                     <p style="font-size: 0.85rem; margin-top: 1rem;">
-                        This is a computer-generated ticket and does not require a signature. 
-                        Please present this ticket along with a valid ID at the venue.
+                        This is a computer-7rem; margin-top: 0.5rem;">
+                        This is a computer-generated transaction ticket and does not require a signature. 
+                        Please present this ticket along with a valid photo ID at the venue for verification.
+                    </p>
+                    <p style="font-size: 0.65rem; margin-top: 0.3tring('en-US', { day: '2-digit', month: 'short', year: 'numeric' })} at ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                     </p>
                 </div>
             `;
@@ -644,9 +796,7 @@
             `;
         }
 
-        function downloadTicket() {
-            window.print();
-        }
+
     </script>
 </body>
 

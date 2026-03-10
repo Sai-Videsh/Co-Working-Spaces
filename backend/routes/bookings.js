@@ -179,6 +179,7 @@ router.post('/', async (req, res) => {
       .insert([{
         workspace_id,
         user_name,
+        user_email,
         start_time,
         end_time,
         total_price: finalPrice,

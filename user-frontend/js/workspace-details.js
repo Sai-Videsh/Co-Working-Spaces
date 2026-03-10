@@ -86,15 +86,15 @@ async function loadWorkspace(wsId, hubId) {
                         <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem;">
                             <div style="display:flex;justify-content:space-between;padding:.75rem;background:var(--light);border-radius:6px;">
                                 <span><i class="fas fa-clock" style="color:var(--accent);"></i> Hourly</span>
-                                <strong>₹${ws.base_price}/hr</strong>
+                                <strong>₹${parseFloat(ws.base_price).toFixed(2)}/hr</strong>
                             </div>
                             <div style="display:flex;justify-content:space-between;padding:.75rem;background:var(--light);border-radius:6px;">
                                 <span><i class="fas fa-calendar-day" style="color:var(--accent);"></i> Daily (8hrs)</span>
-                                <strong>~₹${(ws.base_price * 8).toLocaleString()}</strong>
+                                <strong>~₹${parseFloat(ws.base_price * 8).toFixed(2)}</strong>
                             </div>
                             <div style="display:flex;justify-content:space-between;padding:.75rem;background:var(--light);border-radius:6px;">
                                 <span><i class="fas fa-calendar-alt" style="color:var(--accent);"></i> Monthly</span>
-                                <strong>~₹${(ws.base_price * 160).toLocaleString()}</strong>
+                                <strong>~₹${parseFloat(ws.base_price * 160).toFixed(2)}</strong>
                             </div>
                         </div>
                         <p style="font-size:.8rem;color:var(--text-light);margin-bottom:1.25rem;">

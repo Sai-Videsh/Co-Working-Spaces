@@ -117,12 +117,20 @@ function renderActions(status) {
     const el = document.getElementById('action-buttons');
     if (!el) return;
     const actions = [];
+    
+    // Always add View Full Ticket button
+    actions.push(`<button class="btn btn-primary" onclick="viewFullTicket()"><i class="fas fa-ticket-alt"></i> View Full Ticket</button>`);
+    
     if (status === 'pending') actions.push(`<button class="btn btn-success" onclick="updateStatus('confirmed')"><i class="fas fa-check"></i> Confirm</button>`);
     if (status === 'confirmed') actions.push(`<button class="btn" onclick="updateStatus('checked_in')"><i class="fas fa-sign-in-alt"></i> Check In</button>`);
     if (status === 'checked_in') actions.push(`<button class="btn btn-outline" onclick="updateStatus('completed')"><i class="fas fa-flag-checkered"></i> Complete</button>`);
     if (!['cancelled', 'completed'].includes(status))
         actions.push(`<button class="btn btn-danger" onclick="updateStatus('cancelled')"><i class="fas fa-times"></i> Cancel</button>`);
     el.innerHTML = actions.length ? actions.join('') : '<span style="color:var(--text-light);">No actions available.</span>';
+}
+
+function viewFullTicket() {
+    window.open(`../user-frontend/ticket.html?id=${bookingId}`, '_blank');
 }
 
 async function updateStatus(status) {

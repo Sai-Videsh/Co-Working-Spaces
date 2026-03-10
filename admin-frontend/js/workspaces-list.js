@@ -75,7 +75,7 @@ function renderWorkspaces(workspaces) {
             <td>${hubName(w.hub_id)}</td>
             <td>${formatType(w.type)}</td>
             <td>${w.capacity || '—'}</td>
-            <td>₹${w.base_price || w.price_per_hour || 0}/hr</td>
+            <td>₹${parseFloat(w.base_price || w.price_per_hour || 0).toFixed(2)}/hr</td>
             <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${w.description || ''}">${w.description || '—'}</td>
             <td><span class="badge ${w.is_available !== false ? 'badge-success' : 'badge-danger'}">
                 ${w.is_available !== false ? 'Available' : 'Unavailable'}

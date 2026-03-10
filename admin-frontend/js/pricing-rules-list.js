@@ -52,7 +52,7 @@ function renderRules(rules) {
     tbody.innerHTML = rules.map(r => {
         const workspaceName = r.workspaces?.name || `Workspace #${r.workspace_id}`;
         const percentMod = r.percentage_modifier != null ? (r.percentage_modifier > 0 ? '+' : '') + r.percentage_modifier + '%' : '—';
-        const flatMod = r.flat_modifier != null ? (r.flat_modifier > 0 ? '+' : '') + '₹' + r.flat_modifier : '—';
+        const flatMod = r.flat_modifier != null ? (r.flat_modifier > 0 ? '+' : '') + '₹' + parseFloat(r.flat_modifier).toFixed(2) : '—';
         const timeRange = r.start_time && r.end_time ? `${r.start_time} – ${r.end_time}` : '—';
         const days = r.days && r.days.length > 0 ? r.days.join(', ') : 'All';
 

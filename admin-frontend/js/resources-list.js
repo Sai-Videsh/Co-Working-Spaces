@@ -71,7 +71,7 @@ function renderResources(resources) {
             <td>${r.id}</td>
             <td>${r.name}</td>
             <td>${workspaceName(r.workspace_id)}</td>
-            <td>₹${r.price_per_slot || 0}/slot</td>
+            <td>₹${parseFloat(r.price_per_slot || 0).toFixed(2)}/slot</td>
             <td>${r.quantity !== undefined ? r.quantity : '—'}</td>
             <td>${r.description || '—'}</td>
             <td>

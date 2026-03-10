@@ -326,7 +326,7 @@ function displayWorkspaces(workspaces) {
                 </div>
                 <div class="workspace-footer">
                     <div class="price">
-                        ₹${workspace.base_price} <span>/hr</span>
+                        ₹${parseFloat(workspace.base_price).toFixed(2)} <span>/hr</span>
                     </div>
                     <button class="btn-primary" id="book-btn-${workspace.id}" onclick="openBookingModal(${workspace.id})" ${isUnavailable ? 'disabled' : ''}>
                         <i class="fas fa-calendar-check"></i> ${isUnavailable ? 'Not Available' : 'Book Now'}
@@ -440,7 +440,7 @@ async function showRecommendedWorkspaces() {
                         </div>
                         <div class="workspace-footer">
                             <div class="price">
-                                ₹${workspace.base_price} <span>/hr</span>
+                                ₹${parseFloat(workspace.base_price).toFixed(2)} <span>/hr</span>
                             </div>
                             <button class="btn-primary" onclick="selectHub(${workspace.hub_id})">
                                 <i class="fas fa-arrow-right"></i> View Hub
@@ -614,7 +614,7 @@ async function openBookingModal(workspaceId) {
                         <p>${resource.description}</p>
                     </div>
                     <div class="resource-select">
-                        <span class="resource-price">₹${resource.price_per_slot}/hour</span>
+                        <span class="resource-price">₹${parseFloat(resource.price_per_slot).toFixed(2)}/hour</span>
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
                             <input type="number" id="qty-${resource.id}" min="0" value="0" style="width: 60px; padding: 0.25rem; border: 1px solid var(--border); border-radius: 4px; text-align: center;" onchange="updateResourceQuantity(${resource.id}, ${resource.price_per_slot}, '${resource.name}')">
                             <label for="qty-${resource.id}" style="font-size: 0.85rem; color: var(--text-light);">Qty</label>
@@ -818,9 +818,9 @@ function updatePricingSummary() {
         const resourcesPrice = selectedResources.reduce((sum, r) => sum + (r.price * r.quantity), 0);
         const totalPrice = basePrice + resourcesPrice;
 
-        document.getElementById('base-price').textContent = `₹${basePrice}`;
-        document.getElementById('resources-price').textContent = `₹${resourcesPrice}`;
-        document.getElementById('total-price').textContent = `₹${totalPrice}`;
+        document.getElementById('base-price').textContent = `₹${parseFloat(basePrice).toFixed(2)}`;
+        document.getElementById('resources-price').textContent = `₹${parseFloat(resourcesPrice).toFixed(2)}`;
+        document.getElementById('total-price').textContent = `₹${parseFloat(totalPrice).toFixed(2)}`;
         return;
     }
 
@@ -919,7 +919,7 @@ function updatePricingSummary() {
                 // Format duration for display based on booking type
                 let durationText = '';
                 if (bookingType === 'hourly') {
-                    const hoursFormatted = pricing.hours % 1 === 0 ? pricing.hours : pricing.hours.toFixed(1);
+                    const hoursFormatted = pricing.hours % 1 === 0 ? pricing.hours : pricing.hours.toFixed(2);
                     durationText = `${hoursFormatted} hour${pricing.hours !== 1 ? 's' : ''}`;
                 } else if (bookingType === 'daily') {
                     const days = Math.ceil(pricing.hours / 8);
@@ -992,7 +992,7 @@ function updatePricingSummary() {
                             displayPercentage = `${rule.percentage_modifier > 0 ? '+' : ''}${rule.percentage_modifier}%`;
                         }
                         if (rule.flat_modifier && rule.flat_modifier !== 0) {
-                            displayPercentage += (displayPercentage ? ' + ' : '') + `${rule.flat_modifier > 0 ? '+' : ''}₹${Math.abs(rule.flat_modifier)}`;
+                            displayPercentage += (displayPercentage ? ' + ' : '') + `${rule.flat_modifier > 0 ? '+' : ''}₹${Math.abs(rule.flat_modifier).toFixed(2)}`;
                         }
 
                         modifiers.push({
@@ -1032,7 +1032,7 @@ function updatePricingSummary() {
                                         <div style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">${modifier.reason}</div>
                                     </div>
                                 </div>
-                                <div style="font-weight: 600; color: ${modifier.color};">+₹${modifier.amount}</div>
+                                <div style="font-weight: 600; color: ${modifier.color};">+₹${parseFloat(modifier.amount).toFixed(2)}</div>
                             </div>
                         `;
                         });
@@ -1059,7 +1059,7 @@ function updatePricingSummary() {
                                         <div style="font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem;">${modifier.reason}</div>
                                     </div>
                                 </div>
-                                <div style="font-weight: 600; color: #27ae60;">-₹${modifier.amount}</div>
+                                <div style="font-weight: 600; color: #27ae60;">-₹${parseFloat(modifier.amount).toFixed(2)}</div>
                             </div>
                         `;
                         });
@@ -1083,7 +1083,7 @@ function updatePricingSummary() {
                     let unitText = '';
 
                     if (bookingType === 'hourly') {
-                        const hoursFormatted = hours % 1 === 0 ? hours : hours.toFixed(1);
+                        const hoursFormatted = hours % 1 === 0 ? hours : hours.toFixed(2);
                         unitText = `${hoursFormatted}h`;
                     } else if (bookingType === 'daily') {
                         const days = Math.ceil(hours / 24);
@@ -1098,7 +1098,7 @@ function updatePricingSummary() {
                         const resourceTotal = resource.price * resource.quantity * hours;
                         priceHTML += `
                         <div class="price-row" style="font-size: 0.875rem; margin-left: 1rem;">
-                            <span>${resource.name} <span style="color: var(--text-light);">(${resource.quantity} × ₹${resource.price} × ${unitText})</span></span>
+                            <span>${resource.name} <span style="color: var(--text-light);">(${resource.quantity} × ₹${parseFloat(resource.price).toFixed(2)} × ${unitText})</span></span>
                             <span>₹${resourceTotal.toFixed(2)}</span>
                         </div>
                     `;
@@ -1156,9 +1156,9 @@ function updatePricingSummary() {
             const resourcesPrice = selectedResources.reduce((sum, r) => sum + r.price, 0);
             const totalPrice = basePrice + resourcesPrice;
 
-            document.getElementById('base-price').textContent = `₹${basePrice}`;
-            document.getElementById('resources-price').textContent = `₹${resourcesPrice}`;
-            document.getElementById('total-price').textContent = `₹${totalPrice}`;
+            document.getElementById('base-price').textContent = `₹${parseFloat(basePrice).toFixed(2)}`;
+            document.getElementById('resources-price').textContent = `₹${parseFloat(resourcesPrice).toFixed(2)}`;
+            document.getElementById('total-price').textContent = `₹${parseFloat(totalPrice).toFixed(2)}`;
         });
 }
 
@@ -1225,7 +1225,7 @@ function handleBookingSubmit(e) {
 
 // Payment Modal
 function openPaymentModal(amount) {
-    document.getElementById('payment-amount').textContent = `₹${amount}`;
+    document.getElementById('payment-amount').textContent = `₹${parseFloat(amount).toFixed(2)}`;
 
     // Copy pricing summary to payment modal
     const pricingSummary = document.querySelector('.pricing-summary');
@@ -1313,9 +1313,16 @@ async function processPayment() {
 
         const qrData = qrResult.data;
 
+        // Generate transaction ID
+        let transactionId = booking.transaction_id;
+        if (!transactionId) {
+            const dateStr = new Date(booking.created_at || new Date()).toISOString().slice(0, 19).replace(/[-:T]/g, '').slice(0, 14);
+            transactionId = `TXN-${dateStr}`;
+        }
+
         // Save transaction
         const transaction = {
-            id: `TXN${Date.now()}`,
+            id: transactionId,
             booking_id: booking.id,
             workspace_name: currentWorkspace.name,
             amount: currentBookingData.total_price,
@@ -1333,8 +1340,8 @@ async function processPayment() {
         // Close payment modal
         closePaymentModal();
 
-        // Show success modal with QR code and booking ID
-        showSuccessModal(qrData.qr_image, booking.id);
+        // Show success modal with QR code, booking ID, and transaction ID
+        showSuccessModal(qrData.qr_image, booking.id, transactionId);
 
     } catch (error) {
         console.error('Error processing payment:', error);
@@ -1343,10 +1350,38 @@ async function processPayment() {
     }
 }
 
-function showSuccessModal(qrCode, bookingId) {
+function showSuccessModal(qrCode, bookingId, transactionId) {
     currentBookingId = bookingId;
     document.getElementById('qr-code-container').innerHTML = `<img src="${qrCode}" alt="QR Code">`;
+    document.getElementById('booking-id-display').textContent = `BOOK-${bookingId}`;
+    
+    // Generate transaction ID if not provided
+    if (!transactionId) {
+        const dateStr = new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '').slice(0, 14);
+        transactionId = `TXN-${dateStr}`;
+    }
+    document.getElementById('transaction-id-display').textContent = transactionId;
+    
     document.getElementById('success-modal').classList.add('active');
+}
+
+function saveQRCode() {
+    const qrImg = document.querySelector('#qr-code-container img');
+    if (!qrImg) {
+        alert('QR Code not found');
+        return;
+    }
+
+    const bookingId = currentBookingId || 'booking';
+    const link = document.createElement('a');
+    link.href = qrImg.src;
+    link.download = `WorkSpace-QRCode-BOOK-${bookingId}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Close modal after download
+    closeSuccessModal();
 }
 
 function viewFullTicket() {
@@ -1425,7 +1460,7 @@ async function loadMyBookings() {
                     </div>
                 </div>
                 <div class="booking-footer">
-                    <div class="booking-price">₹${booking.total_price}</div>
+                    <div class="booking-price">₹${parseFloat(booking.total_price).toFixed(2)}</div>
                     <div style="display: flex; gap: 0.5rem;">
                         ${booking.status === 'confirmed' || booking.status === 'checked_in' ? `
                             <button class="btn-secondary" onclick="viewQR(${booking.id})">
@@ -1532,7 +1567,7 @@ function loadTransactions() {
 
     document.getElementById('total-transactions').textContent = totalTransactions;
     document.getElementById('successful-transactions').textContent = successfulTransactions;
-    document.getElementById('total-spent').textContent = `₹${totalSpent}`;
+    document.getElementById('total-spent').textContent = `₹${parseFloat(totalSpent).toFixed(2)}`;
 
     if (transactions.length === 0) {
         container.innerHTML = '<div class="no-data"><i class="fas fa-receipt"></i><h3>No transactions yet</h3><p>Your payment history will appear here</p></div>';
@@ -1567,7 +1602,7 @@ function displayTransactions(transactions) {
                     <i class="fas fa-credit-card"></i>
                     <span>${formatPaymentMethod(txn.method)}</span>
                 </div>
-                <div class="transaction-amount">₹${txn.amount}</div>
+                <div class="transaction-amount">₹${parseFloat(txn.amount).toFixed(2)}</div>
             </div>
         </div>
     `).join('');
