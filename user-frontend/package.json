@@ -4,7 +4,7 @@
   "description": "User Frontend for CoWorking Space Platform",
   "scripts": {
     "start": "npx http-server -p 8080 -c-1 -a localhost -o",
-    "dev": "npx http-server -p 8080 -c-1 -a localhost"
+    "dev": "npx http-server -p 8080 -c-1 -a localhost -o home.html"
   },
   "keywords": [
     "coworking",

@@ -2,6 +2,7 @@
 
 let bookingData  = null;
 let activeMethod = null;
+let appliedCoupon = null; // { code, discount_percentage }
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!requireAuth()) return;
@@ -28,6 +29,95 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>`;
     }
 });
+
+// ── Coupon ─────────────────────────────────────
+
+async function applyCoupon() {
+    const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+    const statusEl = document.getElementById('coupon-status');
+    const btn = document.getElementById('coupon-apply-btn');
+
+    if (!code) { showCouponStatus('Please enter a coupon code.', false); return; }
+
+    // If already applied, allow removing
+    if (appliedCoupon) { removeCoupon(); return; }
+
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    try {
+        const res = await fetch(`${API_URL}/pricing/coupons/validate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                code,
+                workspace_id: bookingData.workspace_id,
+                hub_id: bookingData.hub_id
+            })
+        });
+        const json = await res.json();
+
+        if (!json.success) {
+            showCouponStatus(json.error || 'Invalid coupon code.', false);
+            btn.disabled = false;
+            btn.textContent = 'Apply';
+            return;
+        }
+
+        appliedCoupon = json.data;
+        const discount = appliedCoupon.discount_percentage;
+        const originalPrice = bookingData.total_price;
+        const discountAmount = (originalPrice * discount) / 100;
+        const newPrice = originalPrice - discountAmount;
+
+        // Update displayed price
+        document.getElementById('payment-amount').textContent = formatCurrency(newPrice);
+
+        // Show coupon details in breakdown
+        const bd = document.getElementById('payment-breakdown');
+        const existingCouponRow = bd.querySelector('.coupon-applied-row');
+        if (!existingCouponRow) {
+            const row = document.createElement('div');
+            row.className = 'coupon-applied-row';
+            row.style.cssText = 'margin-top:.5rem;padding:.6rem .9rem;background:#d4edda;border-radius:6px;font-size:.875rem;display:flex;justify-content:space-between;align-items:center;';
+            row.innerHTML = `<span style="color:#155724;"><i class="fas fa-tag"></i> <strong>${appliedCoupon.code}</strong> — ${discount}% off applied</span><span style="color:#155724;font-weight:700;">−${formatCurrency(discountAmount)}</span>`;
+            bd.appendChild(row);
+        }
+
+        showCouponStatus(
+            `✓ Coupon applied — ${discount}% off! You save ${formatCurrency(discountAmount)}`,
+            true
+        );
+        document.getElementById('coupon-input').disabled = true;
+        btn.textContent = 'Remove';
+        btn.style.background = 'var(--danger)';
+        btn.disabled = false;
+    } catch {
+        showCouponStatus('Failed to validate coupon. Try again.', false);
+        btn.disabled = false;
+        btn.textContent = 'Apply';
+    }
+}
+
+function removeCoupon() {
+    appliedCoupon = null;
+    document.getElementById('coupon-input').disabled = false;
+    document.getElementById('coupon-input').value = '';
+    document.getElementById('payment-amount').textContent = formatCurrency(bookingData.total_price);
+    document.getElementById('coupon-status').style.display = 'none';
+    const row = document.querySelector('.coupon-applied-row');
+    if (row) row.remove();
+    const btn = document.getElementById('coupon-apply-btn');
+    btn.textContent = 'Apply';
+    btn.style.background = 'var(--primary)';
+}
+
+function showCouponStatus(msg, success) {
+    const el = document.getElementById('coupon-status');
+    el.style.display = 'block';
+    el.style.color = success ? 'var(--success)' : 'var(--danger)';
+    el.textContent = msg;
+}
 
 // ── Payment Method Selection ───────────────────
 
@@ -72,6 +162,13 @@ async function processPayment(method) {
     const btn = form.querySelector('button[onclick]');
     if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing…'; }
 
+    // Apply coupon discount to final price
+    let finalPrice = bookingData.total_price;
+    if (appliedCoupon) {
+        const discount = (finalPrice * appliedCoupon.discount_percentage) / 100;
+        finalPrice = parseFloat((finalPrice - discount).toFixed(2));
+    }
+
     try {
         // 1. Create booking (auth token provides user identity — no need to send user fields)
         const bookRes = await fetch(`${API_URL}/bookings`, {
@@ -81,9 +178,10 @@ async function processPayment(method) {
                 workspace_id: bookingData.workspace_id,
                 start_time:   bookingData.start_time,
                 end_time:     bookingData.end_time,
-                total_price:  bookingData.total_price,
+                total_price:  finalPrice,
                 booking_type: bookingData.booking_type,
                 status:       'confirmed',
+                coupon_code:  appliedCoupon?.code || null,
                 // Pass resources inline so the backend handles them in one transaction
                 resources: (bookingData.resources || []).map(r => ({
                     resource_id: r.id,
@@ -108,7 +206,10 @@ async function processPayment(method) {
             workspace_name: bookingData.workspace_name,
             hub_name:   bookingData.hub_name,
             hub_city:   bookingData.hub_city,
-            total_price: bookingData.total_price,
+            total_price: finalPrice,
+            coupon_code: appliedCoupon?.code || null,
+            coupon_discount: appliedCoupon?.discount_percentage || null,
+            original_price: appliedCoupon ? bookingData.total_price : null,
             user_name:  currentUser?.name  || bookingData.user_name,
             start_time: bookingData.start_time,
             end_time:   bookingData.end_time

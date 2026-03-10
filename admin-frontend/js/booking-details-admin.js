@@ -130,7 +130,7 @@ function renderActions(status) {
 }
 
 function viewFullTicket() {
-    window.open(`../user-frontend/ticket.html?id=${bookingId}`, '_blank');
+    window.open(`http://localhost:8080/ticket.html?id=${bookingId}`, '_blank');
 }
 
 async function updateStatus(status) {

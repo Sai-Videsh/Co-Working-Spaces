@@ -63,6 +63,18 @@
         <!-- Booking summary -->
         <div id="payment-breakdown" style="margin-bottom:2rem;"></div>
 
+        <!-- Coupon Code -->
+        <div style="margin-bottom:2rem;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--light);">
+            <div style="font-weight:600;margin-bottom:.75rem;color:var(--primary);"><i class="fas fa-ticket-alt"></i> Have a coupon code?</div>
+            <div style="display:flex;gap:.5rem;">
+                <input type="text" id="coupon-input" placeholder="Enter coupon code" maxlength="20"
+                    style="flex:1;padding:.6rem .9rem;border:1px solid var(--border);border-radius:4px;font-size:.95rem;text-transform:uppercase;letter-spacing:1px;"
+                    oninput="this.value=this.value.toUpperCase()">
+                <button type="button" id="coupon-apply-btn" onclick="applyCoupon()" style="padding:.6rem 1.2rem;background:var(--primary);color:white;border:none;border-radius:4px;font-weight:600;cursor:pointer;">Apply</button>
+            </div>
+            <div id="coupon-status" style="margin-top:.5rem;font-size:.875rem;display:none;"></div>
+        </div>
+
         <!-- Payment method selector -->
         <h3 style="margin-bottom:1rem;color:var(--primary);">Select Payment Method</h3>
         <div class="payment-methods">

@@ -70,8 +70,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get booking by ID (auth required)
-router.get('/:id', authenticateToken, async (req, res) => {
+// Get booking by ID
+router.get('/:id', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('bookings')
@@ -423,6 +423,35 @@ router.get('/ticket/:id', async (req, res) => {
         qr_image: qrImage
       }
     });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Get all booking resources (for admin database viewer)
+router.get('/resources', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('booking_resources')
+      .select(`
+        *,
+        bookings (
+          id,
+          user_name,
+          start_time,
+          end_time
+        ),
+        resources (
+          id,
+          name,
+          description,
+          price_per_slot
+        )
+      `)
+      .order('id', { ascending: false });
+
+    if (error) throw error;
+    res.json({ success: true, data });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
