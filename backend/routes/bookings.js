@@ -71,8 +71,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get booking by ID (auth required)
-router.get('/:id', authenticateToken, async (req, res) => {
+// Get booking by ID
+router.get('/:id', async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('bookings')

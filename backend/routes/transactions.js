@@ -40,6 +40,7 @@ class TransactionAdapter {
     const statusMap = {
       'confirmed': 'success',
       'completed': 'success',
+      'checked_in': 'success',
       'cancelled': 'failed',
       'pending': 'pending'
     };

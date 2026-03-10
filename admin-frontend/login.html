@@ -150,8 +150,8 @@
 
         <form id="login-form" onsubmit="handleLogin(event)">
             <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required autocomplete="username">
+                <label for="username">Email Address</label>
+                <input type="email" id="username" name="username" required autocomplete="email" placeholder="admin@workspace.com">
             </div>
 
             <div class="form-group">
@@ -164,45 +164,54 @@
             </button>
         </form>
 
-        <div class="demo-credentials">
-            <strong>Demo Credentials:</strong><br>
-            Username: <strong>admin</strong><br>
-            Password: <strong>admin123</strong>
-        </div>
     </div>
 
     <script>
+        const API_URL = 'http://localhost:3001/api';
+
         // Check if already logged in
         if (localStorage.getItem('adminAuth')) {
             window.location.href = 'admin-dashboard.html';
         }
 
-        function handleLogin(event) {
+        async function handleLogin(event) {
             event.preventDefault();
 
-            const username = document.getElementById('username').value;
+            const email    = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('error-message');
+            const btn      = event.target.querySelector('button[type="submit"]');
 
-            // Simple authentication (in production, this should be backend-based)
-            if (username === 'admin' && password === 'admin123') {
-                // Store auth token
+            errorMsg.classList.remove('show');
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
+
+            try {
+                const res = await fetch(`${API_URL}/auth/admin-login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || 'Invalid credentials');
+                }
+
                 localStorage.setItem('adminAuth', JSON.stringify({
-                    username: username,
+                    username: data.user.email,
                     loginTime: new Date().toISOString(),
-                    token: btoa(username + ':' + Date.now())
+                    token: data.token
                 }));
 
-                // Redirect to dashboard
                 window.location.href = 'admin-dashboard.html';
-            } else {
-                errorMsg.textContent = 'Invalid username or password';
+            } catch (err) {
+                errorMsg.textContent = err.message || 'Login failed. Please try again.';
                 errorMsg.classList.add('show');
-
-                // Clear error after 3 seconds
-                setTimeout(() => {
-                    errorMsg.classList.remove('show');
-                }, 3000);
+                setTimeout(() => errorMsg.classList.remove('show'), 3000);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Login';
             }
         }
     </script>

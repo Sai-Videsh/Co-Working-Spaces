@@ -16,20 +16,20 @@ window.addEventListener('pageshow', (event) => {
 
 async function loadDashboard() {
     try {
-        const [hubs, workspaces, bookings, transactions, users, ratings, qrCodes] = await Promise.all([
+        const [hubs, workspaces, bookings, users] = await Promise.all([
             fetch(`${API_URL}/hubs`).then(r => r.json()).then(d => d.data || d),
             fetch(`${API_URL}/workspaces`).then(r => r.json()).then(d => d.data || d),
             fetch(`${API_URL}/bookings`).then(r => r.json()).then(d => d.data || d),
-            fetch(`${API_URL}/transactions`).then(r => r.json()).then(d => d.data || d).catch(() => []),
-            fetch(`${API_URL}/users`).then(r => r.json()).then(d => d.data || d).catch(() => []),
-            fetch(`${API_URL}/ratings`).then(r => r.json()).then(d => d.data || d).catch(() => []),
-            fetch(`${API_URL}/qr`).then(r => r.json()).then(d => d.data || d).catch(() => [])
+            fetch(`${API_URL}/users`, { headers: getAdminHeaders() }).then(r => r.json()).then(d => d.data || d).catch(() => [])
         ]);
 
-        // Calculate revenue from successful transactions
-        const revenue = Array.isArray(transactions)
-            ? transactions.filter(t => t.status === 'success').reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0)
-            : bookings.filter(b => b.status === 'confirmed' || b.status === 'completed').reduce((sum, b) => sum + (parseFloat(b.total_price) || 0), 0);
+        // Calculate revenue: sum total_price from all paid bookings
+        const paidStatuses = new Set(['confirmed', 'completed', 'checked_in']);
+        const revenue = Array.isArray(bookings)
+            ? bookings
+                .filter(b => paidStatuses.has(b.status))
+                .reduce((sum, b) => sum + (parseFloat(b.total_price) || 0), 0)
+            : 0;
 
         // Calculate active bookings (confirmed or checked in)
         const activeBookings = Array.isArray(bookings)
@@ -37,9 +37,6 @@ async function loadDashboard() {
             : 0;
 
         // Calculate average rating
-        const avgRating = Array.isArray(ratings) && ratings.length > 0
-            ? (ratings.reduce((sum, r) => sum + (r.rating || 0), 0) / ratings.length).toFixed(1)
-            : 0;
 
         // Count users
         const userCount = Array.isArray(users) ? users.length : 0;
@@ -64,10 +61,6 @@ async function loadDashboard() {
             <div class="stat-card">
                 <i class="fas fa-users"></i>
                 <div><div class="value">${userCount}</div><div class="label">Total Users</div></div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-star"></i>
-                <div><div class="value">${avgRating} ★</div><div class="label">Avg Rating</div></div>
             </div>
         `;
 

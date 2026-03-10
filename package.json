@@ -11,10 +11,18 @@
     "install-backend": "cd backend && npm install",
     "start-all": "concurrently \"npm run backend\" \"npm run user-frontend\" \"npm run admin-frontend\""
   },
-  "keywords": ["coworking", "booking", "workspace", "platform"],
+  "keywords": [
+    "coworking",
+    "booking",
+    "workspace",
+    "platform"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "google-auth-library": "^10.6.1"
   }
 }

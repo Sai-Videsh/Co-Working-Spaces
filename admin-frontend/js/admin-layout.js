@@ -4,7 +4,9 @@
     // Check authentication (skip for login page)
     if (!window.location.pathname.includes('login.html')) {
         const adminAuth = localStorage.getItem('adminAuth');
-        if (!adminAuth) {
+        const adminAuthObj = adminAuth ? JSON.parse(adminAuth) : null;
+        if (!adminAuthObj || !adminAuthObj.token) {
+            localStorage.removeItem('adminAuth');
             window.location.href = 'login.html';
             return;
         }
@@ -32,9 +34,6 @@
         <a href="users-list.html" data-page="users-list">
             <i class="fas fa-users"></i> Users
         </a>
-        <a href="ratings-list.html" data-page="ratings-list">
-            <i class="fas fa-star"></i> Reviews
-        </a>
         <a href="pricing-rules-list.html" data-page="pricing-rules-list">
             <i class="fas fa-tags"></i> Pricing
         </a>
@@ -43,9 +42,6 @@
         </a>
         <a href="financial-reports.html" data-page="financial-reports">
             <i class="fas fa-chart-bar"></i> Reports
-        </a>
-        <a href="database-viewer.html" data-page="database-viewer">
-            <i class="fas fa-database"></i> Database Viewer
         </a>
         
         <div style="margin-top:auto;padding:1rem;border-top:1px solid var(--border);">

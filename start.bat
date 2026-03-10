@@ -46,7 +46,7 @@ echo Opening browser...
 timeout /t 1 /nobreak >nul
 
 REM Open browser
-start http://localhost:8080
+start http://localhost:8080/auth.html
 
 echo.
 echo Close the server windows to stop the application.

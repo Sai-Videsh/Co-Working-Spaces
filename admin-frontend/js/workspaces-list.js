@@ -91,7 +91,7 @@ function renderWorkspaces(workspaces) {
 async function deleteWorkspace(id) {
     if (!confirm('Delete this workspace?')) return;
     try {
-        const res = await fetch(`${API_URL}/workspaces/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/workspaces/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
         if (!res.ok) throw new Error();
         showToast('Workspace deleted', 'success');
         allWorkspaces = allWorkspaces.filter(w => w.id !== id);

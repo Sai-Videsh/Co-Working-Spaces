@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { supabase } = require('../config/supabase');
 const { calculateDynamicPrice } = require('../utils/pricing');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
 // Get all pricing rules
 router.get('/', async (req, res) => {
@@ -55,7 +56,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create pricing rule (Admin)
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const {
       workspace_id,
@@ -96,7 +97,7 @@ router.post('/', async (req, res) => {
 
 
 // Update pricing rule (Admin)
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const {
       workspace_id,
@@ -136,7 +137,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete pricing rule (Admin)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { error } = await supabase
       .from('pricing_rules')

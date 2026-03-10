@@ -49,4 +49,19 @@ function optionalAuth(req, res, next) {
     next();
 }
 
-module.exports = { authenticateToken, optionalAuth, JWT_SECRET, JWT_EXPIRES_IN };
+/**
+ * Middleware: requires the authenticated user to be the admin.
+ * Must be used after authenticateToken.
+ */
+function requireAdmin(req, res, next) {
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@workspace.com';
+    if (!req.user || req.user.email !== adminEmail) {
+        return res.status(403).json({
+            success: false,
+            error: 'Admin access required.'
+        });
+    }
+    next();
+}
+
+module.exports = { authenticateToken, optionalAuth, requireAdmin, JWT_SECRET, JWT_EXPIRES_IN };

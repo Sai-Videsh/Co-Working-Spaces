@@ -79,7 +79,7 @@ function renderHubs(hubs) {
 async function deleteHub(id) {
     if (!confirm('Delete this hub? This cannot be undone.')) return;
     try {
-        const res = await fetch(`${API_URL}/hubs/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/hubs/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
         if (!res.ok) throw new Error();
         showToast('Hub deleted', 'success');
         allHubs = allHubs.filter(h => h.id !== id);

@@ -370,4 +370,34 @@ router.post('/google', async (req, res) => {
   }
 });
 
+// Admin login – issues a JWT scoped to the admin email
+router.post('/admin-login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const adminEmail    = process.env.ADMIN_EMAIL    || 'admin@workspace.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, error: 'Email and password are required.' });
+    }
+    if (email !== adminEmail || password !== adminPassword) {
+      return res.status(401).json({ success: false, error: 'Invalid admin credentials.' });
+    }
+
+    const token = jwt.sign(
+      { id: 0, email: adminEmail, name: 'Admin', role: 'admin' },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    res.json({
+      success: true,
+      token,
+      user: { id: 0, email: adminEmail, name: 'Admin', role: 'admin' }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: 'Admin login failed.' });
+  }
+});
+
 module.exports = router;

@@ -11,7 +11,7 @@ async function loadBooking() {
     try {
         const [bResult, qrResult] = await Promise.allSettled([
             fetch(`${API_URL}/bookings/${bookingId}`).then(r => r.json()).then(d => d.data || d),
-            fetch(`${API_URL}/qr/${bookingId}`).then(r => r.json()).then(d => d.data || d),
+            fetch(`${API_URL}/qr/booking/${bookingId}`).then(r => r.json()).then(d => d.data || d),
         ]);
 
         const b = bResult.value;
@@ -130,7 +130,7 @@ async function updateStatus(status) {
     try {
         const res = await fetch(`${API_URL}/bookings/${bookingId}`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { ...getAdminHeaders(), 'Content-Type': 'application/json' },
             body: JSON.stringify({ status })
         });
         if (!res.ok) throw new Error();

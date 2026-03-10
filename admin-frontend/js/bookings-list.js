@@ -92,7 +92,7 @@ async function quickUpdateStatus(bookingId, status) {
     try {
         const res = await fetch(`${API_URL}/bookings/${bookingId}`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { ...getAdminHeaders(), 'Content-Type': 'application/json' },
             body: JSON.stringify({ status })
         });
 

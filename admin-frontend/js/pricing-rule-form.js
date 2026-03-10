@@ -102,7 +102,7 @@ async function handleSubmit(e) {
     try {
         const res = await fetch(url, {
             method,
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAdminHeaders(),
             body: JSON.stringify(body)
         });
 

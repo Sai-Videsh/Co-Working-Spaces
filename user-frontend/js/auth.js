@@ -182,6 +182,10 @@ function initializeGoogleSignIn() {
         auto_select: false
     });
 
+    // Derive a stable button width from the auth card (visible regardless of active tab)
+    const authCard = document.querySelector('.auth-card');
+    const cardWidth = authCard ? authCard.offsetWidth - 80 : 370;
+
     // Render Google Sign-In button for login form
     const loginButton = document.getElementById('google-signin-button-login');
     if (loginButton) {
@@ -190,7 +194,7 @@ function initializeGoogleSignIn() {
             { 
                 theme: 'outline',
                 size: 'large',
-                width: loginButton.parentElement.offsetWidth,
+                width: cardWidth,
                 text: 'continue_with',
                 shape: 'rectangular',
                 logo_alignment: 'left'
@@ -206,7 +210,7 @@ function initializeGoogleSignIn() {
             { 
                 theme: 'outline',
                 size: 'large',
-                width: registerButton.parentElement.offsetWidth,
+                width: cardWidth,
                 text: 'signup_with',
                 shape: 'rectangular',
                 logo_alignment: 'left'

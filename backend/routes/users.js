@@ -1,44 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const { supabase } = require('../config/supabase');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
-// Get all users (from bookings - unique user names and emails)
+// Get all users – Admin only
 router.get('/', async (req, res) => {
   try {
-    const { data: bookings, error } = await supabase
-      .from('bookings')
-      .select('user_name, created_at');
+    const { data: users, error } = await supabase
+      .from('users')
+      .select('id, name, email, phone, created_at')
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
 
-    // Aggregate unique users
-    const usersMap = new Map();
-    bookings.forEach(b => {
-      const name = b.user_name;
+    // Enrich with booking count per user email
+    const { data: bookings } = await supabase
+      .from('bookings')
+      .select('user_email');
 
-      if (name) {
-        if (!usersMap.has(name)) {
-          usersMap.set(name, {
-            name: name,
-            first_booking: b.created_at,
-            booking_count: 1
-          });
-        } else {
-          const user = usersMap.get(name);
-          user.booking_count++;
-          if (new Date(b.created_at) < new Date(user.first_booking)) {
-            user.first_booking = b.created_at;
-          }
-        }
-      }
+    const countMap = {};
+    (bookings || []).forEach(b => {
+      if (b.user_email) countMap[b.user_email] = (countMap[b.user_email] || 0) + 1;
     });
 
-    const users = Array.from(usersMap.values()).map((user, index) => ({
-      id: index + 1,
-      ...user
+    const enriched = users.map(u => ({
+      ...u,
+      booking_count: countMap[u.email] || 0,
     }));
 
-    res.json({ success: true, data: users });
+    res.json({ success: true, data: enriched });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

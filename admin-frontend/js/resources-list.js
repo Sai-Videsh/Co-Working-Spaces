@@ -85,7 +85,7 @@ function renderResources(resources) {
 async function deleteResource(id) {
     if (!confirm('Delete this resource?')) return;
     try {
-        const res = await fetch(`${API_URL}/resources/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/resources/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
         if (!res.ok) throw new Error();
         showToast('Resource deleted', 'success');
         allResources = allResources.filter(r => r.id !== id);

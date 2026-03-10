@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { supabase } = require('../config/supabase');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
 // Get resources by workspace ID
 router.get('/workspace/:workspace_id', async (req, res) => {
@@ -56,7 +57,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create resource (Admin)
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { workspace_id, name, description, price_per_slot, quantity } = req.body;
     
@@ -73,7 +74,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update resource (Admin)
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { workspace_id, name, description, price_per_slot, quantity } = req.body;
     
@@ -91,7 +92,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete resource (Admin)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { error } = await supabase
       .from('resources')

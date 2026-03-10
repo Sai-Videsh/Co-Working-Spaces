@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { supabase } = require('../config/supabase');
 const { validate, rules } = require('../middleware/validate');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
 // Get all ratings (Admin)
 router.get('/', async (req, res) => {
@@ -204,7 +205,7 @@ router.put('/:rating_id', async (req, res) => {
 });
 
 // Delete rating (Admin)
-router.delete('/:rating_id', async (req, res) => {
+router.delete('/:rating_id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { error } = await supabase
       .from('ratings')

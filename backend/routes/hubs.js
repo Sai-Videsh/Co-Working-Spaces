@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { supabase } = require('../config/supabase');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 
 // Get all hubs
 router.get('/', async (req, res) => {
@@ -34,7 +35,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create hub (Admin)
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { name, address, city, state, country, pincode, latitude, longitude } = req.body;
 
@@ -51,7 +52,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update hub (Admin)
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { name, address, city, state, country, pincode, latitude, longitude } = req.body;
 
@@ -69,7 +70,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete hub (Admin)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { error } = await supabase
       .from('working_hubs')

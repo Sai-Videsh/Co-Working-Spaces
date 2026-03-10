@@ -340,3 +340,51 @@ function clearFieldError(field) {
     const existing = field.parentNode.querySelector('.field-error');
     if (existing) existing.remove();
 }
+
+// ── Mobile Navigation (hamburger) ──────────────
+
+/**
+ * Injects a hamburger toggle button into the navbar and wires up open/close logic.
+ * Works on every page that includes config.js — no HTML changes needed.
+ */
+function initMobileNav() {
+    const container = document.querySelector('.navbar .container');
+    if (!container || document.getElementById('nav-toggle')) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'nav-toggle';
+    btn.className = 'nav-toggle';
+    btn.setAttribute('aria-label', 'Toggle navigation');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML =
+        '<span class="nav-toggle-bar"></span>' +
+        '<span class="nav-toggle-bar"></span>' +
+        '<span class="nav-toggle-bar"></span>';
+
+    const toggleNav = (open) => {
+        const nav = container.querySelector('.nav-menu');
+        if (!nav) return;
+        const isOpen = open !== undefined ? open : !nav.classList.contains('nav-open');
+        nav.classList.toggle('nav-open', isOpen);
+        btn.classList.toggle('is-open', isOpen);
+        btn.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    btn.addEventListener('click', (e) => { e.stopPropagation(); toggleNav(); });
+    container.appendChild(btn);
+
+    // Close nav when a link inside it is clicked
+    const navMenu = container.querySelector('.nav-menu');
+    if (navMenu) {
+        navMenu.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => toggleNav(false));
+        });
+    }
+
+    // Close nav when clicking outside the navbar
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.navbar')) toggleNav(false);
+    }, { passive: true });
+}
+
+document.addEventListener('DOMContentLoaded', initMobileNav);

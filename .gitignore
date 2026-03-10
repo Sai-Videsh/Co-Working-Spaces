@@ -5,7 +5,7 @@ node_modules/
 Thumbs.db
 dist/
 build/
-
+supabase_checker/
 # Documentation/Audit Files
 HARDCODED_VALUES_AUDIT.md
 PRICING_RULES.md
@@ -13,3 +13,5 @@ total pages.md
 TOTAL_PAGES.txt
 admin-frontend/README.md
 admin-frontend/ADMIN_GUIDE.md
+dummy_data.json
+data/

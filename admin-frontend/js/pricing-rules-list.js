@@ -95,7 +95,7 @@ function formatRuleType(type) {
 async function deleteRule(id) {
     if (!confirm('Are you sure you want to delete this pricing rule?')) return;
     try {
-        const res = await fetch(`${API_URL}/pricing/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_URL}/pricing/${id}`, { method: 'DELETE', headers: getAdminHeaders() });
         if (!res.ok) throw new Error();
         showToast('Rule deleted successfully', 'success');
         // Reload from server to ensure data is fresh

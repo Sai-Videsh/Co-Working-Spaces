@@ -17,7 +17,7 @@ window.addEventListener('pageshow', (event) => {
 async function loadUsers() {
     try {
         // Fetch users from backend API
-        const usersRes = await fetch(`${API_URL}/users`);
+        const usersRes = await fetch(`${API_URL}/users`, { headers: getAdminHeaders() });
         const usersJson = await usersRes.json();
         allUsers = usersJson.data || usersJson;
 

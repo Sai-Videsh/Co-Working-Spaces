@@ -81,7 +81,7 @@ function validateForm(formEl) {
 
 function checkRule(rule, param, field) {
     const val = field.value.trim();
-    if (rule === 'required' && !val) return field.getAttribute('data-label') || 'This field' + ' is required.';
+    if (rule === 'required' && !val) return (field.getAttribute('data-label') || 'This field') + ' is required.';
     if (rule === 'email' && val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return 'Enter a valid email address.';
     if (rule === 'min' && val && Number(val) < Number(param)) return `Minimum value is ${param}.`;
     if (rule === 'max' && val && Number(val) > Number(param)) return `Maximum value is ${param}.`;
@@ -115,6 +115,14 @@ function saveTransaction(txn) {
     const list = getTransactions();
     list.push(txn);
     localStorage.setItem('transactions', JSON.stringify(list));
+}
+
+/** Returns headers including the admin JWT for write requests. */
+function getAdminHeaders() {
+    const adminAuth = JSON.parse(localStorage.getItem('adminAuth') || '{}');
+    const headers = { 'Content-Type': 'application/json' };
+    if (adminAuth.token) headers['Authorization'] = `Bearer ${adminAuth.token}`;
+    return headers;
 }
 
 // ── Additional Formatters ──────────────────────
