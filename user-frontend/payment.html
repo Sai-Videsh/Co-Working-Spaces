@@ -101,26 +101,26 @@
             <div class="form-group">
                 <label for="card-number">Card Number <span style="color:var(--danger)">*</span></label>
                 <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19"
-                    data-validate="required|minlen:16" data-label="Card Number"
+                    data-validate="required|cardnum" data-label="Card Number"
                     oninput="formatCardNumber(this)">
             </div>
             <div class="form-row">
                 <div class="form-group">
                     <label for="card-expiry">Expiry Date <span style="color:var(--danger)">*</span></label>
                     <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5"
-                        data-validate="required|minlen:5" data-label="Expiry Date"
+                        data-validate="required|expiry" data-label="Expiry Date"
                         oninput="formatExpiry(this)">
                 </div>
                 <div class="form-group">
                     <label for="card-cvv">CVV <span style="color:var(--danger)">*</span></label>
                     <input type="password" id="card-cvv" placeholder="123" maxlength="4"
-                        data-validate="required|minlen:3" data-label="CVV">
+                        data-validate="required|cvv" data-label="CVV">
                 </div>
             </div>
             <div class="form-group">
                 <label for="card-holder">Cardholder Name <span style="color:var(--danger)">*</span></label>
-                <input type="text" id="card-holder" placeholder="Name on card"
-                    data-validate="required|minlen:2" data-label="Cardholder Name">
+                <input type="text" id="card-holder" placeholder="Name on card" maxlength="100"
+                    data-validate="required|minlen:2|maxlen:100" data-label="Cardholder Name">
             </div>
             <button type="button" class="btn-primary btn-block" onclick="processPayment('card')">
                 <i class="fas fa-lock"></i> Pay Securely
@@ -131,8 +131,8 @@
         <form id="upi-form" class="payment-form" novalidate>
             <div class="form-group">
                 <label for="upi-id">UPI ID <span style="color:var(--danger)">*</span></label>
-                <input type="text" id="upi-id" placeholder="yourname@upi"
-                    data-validate="required" data-label="UPI ID">
+                <input type="text" id="upi-id" placeholder="yourname@upi" maxlength="100"
+                    data-validate="required|upi" data-label="UPI ID">
                 <span class="form-hint">E.g. mobile@paytm, name@oksbi</span>
             </div>
             <button type="button" class="btn-primary btn-block" onclick="processPayment('upi')">

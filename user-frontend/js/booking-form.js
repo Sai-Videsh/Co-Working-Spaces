@@ -12,15 +12,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadWorkspace(wsId, hubId);
     await loadResources(wsId);
 
-    // Pre-fill user details from session (read-only)
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-        const nameField  = document.getElementById('user-name');
-        const emailField = document.getElementById('user-email');
-        if (nameField)  { nameField.value = currentUser.name;   nameField.setAttribute('readonly', true); }
-        if (emailField) { emailField.value = currentUser.email; emailField.setAttribute('readonly', true); }
-    }
-
     document.getElementById('booking-form').addEventListener('submit', handleSubmit);
 
     // Wire up real-time pricing updates
@@ -75,7 +66,7 @@ async function loadWorkspace(wsId, hubId) {
 
 async function loadResources(wsId) {
     try {
-        const res = await fetch(`${API_URL}/resources?workspace_id=${wsId}`);
+        const res = await fetch(`${API_URL}/resources/workspace/${wsId}`);
         const resources = (await res.json()).data || [];
         const list = document.getElementById('resources-list');
 
@@ -281,8 +272,8 @@ function handleSubmit(e) {
         workspace_name: currentWorkspace.name,
         hub_name:      currentWorkspace.working_hubs?.name,
         hub_city:      currentWorkspace.working_hubs?.city,
-        user_name:     currentUser?.name  || document.getElementById('user-name').value.trim(),
-        user_email:    currentUser?.email || document.getElementById('user-email').value.trim(),
+        user_name:     currentUser.name,
+        user_email:    currentUser.email,
         start_time:    start,
         end_time:      end,
         booking_type:  document.getElementById('booking-type').value,

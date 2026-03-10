@@ -4,6 +4,10 @@
 
 const API_URL = 'http://localhost:3001/api';
 
+// Google OAuth Configuration
+// IMPORTANT: Replace this with your actual Google Client ID from Google Cloud Console
+const GOOGLE_CLIENT_ID = '894839191711-dm93d40qebp8hrlilh5lbfucem4tpemf.apps.googleusercontent.com';
+
 // ── Formatters ─────────────────────────────────
 
 function formatType(type) {
@@ -278,12 +282,48 @@ function checkValidationRule(rule, param, field) {
     if (rule === 'min' && val && Number(val) < Number(param)) return `Minimum value is ${param}.`;
     if (rule === 'max' && val && Number(val) > Number(param)) return `Maximum value is ${param}.`;
     if (rule === 'minlen' && val && val.length < Number(param)) return `Minimum ${param} characters required.`;
+    if (rule === 'maxlen' && val && val.length > Number(param)) return `${label} must not exceed ${param} characters.`;
     if (rule === 'future' && val && new Date(val) <= new Date()) return `${label} must be a future date/time.`;
     if (rule === 'afterField') {
         const other = document.getElementById(param);
         if (other && val && other.value && new Date(val) <= new Date(other.value))
             return `Must be after ${other.getAttribute('data-label') || param}.`;
     }
+    if (rule === 'maxfuturedays' && val) {
+        const limit = new Date();
+        limit.setDate(limit.getDate() + Number(param));
+        if (new Date(val) > limit) return `${label} cannot be more than ${param} days in the future.`;
+    }
+    if (rule === 'maxduration' && val) {
+        const startField = document.getElementById('start-time');
+        if (startField && startField.value) {
+            const diffHrs = (new Date(val) - new Date(startField.value)) / 3600000;
+            if (diffHrs > Number(param)) return `Booking duration cannot exceed ${param} hours.`;
+        }
+    }
+    if (rule === 'match' && val) {
+        const other = document.getElementById(param);
+        if (other && val !== other.value.trim()) return `${label} does not match.`;
+    }
+    if (rule === 'phone' && val && !/^[+\d][\d\s\-().]{6,19}$/.test(val))
+        return 'Enter a valid phone number (digits, spaces, +, -, ()).';
+    if (rule === 'cardnum' && val) {
+        const digits = val.replace(/\s/g, '');
+        if (!/^\d{16}$/.test(digits)) return 'Card number must be exactly 16 digits.';
+    }
+    if (rule === 'expiry' && val) {
+        if (!/^\d{2}\/\d{2}$/.test(val)) return 'Enter expiry as MM/YY.';
+        const [mm, yy] = val.split('/').map(Number);
+        if (mm < 1 || mm > 12) return 'Invalid expiry month.';
+        const now = new Date();
+        const expYear = 2000 + yy;
+        const expMonth = mm; // 1-based
+        if (expYear < now.getFullYear() || (expYear === now.getFullYear() && expMonth < now.getMonth() + 1))
+            return 'Card has expired.';
+    }
+    if (rule === 'cvv' && val && !/^\d{3,4}$/.test(val)) return 'CVV must be 3 or 4 digits.';
+    if (rule === 'upi' && val && !/^[\w.\-]{2,}@[a-zA-Z]{2,}$/.test(val))
+        return 'Enter a valid UPI ID (e.g. name@paytm).';
     return null;
 }
 

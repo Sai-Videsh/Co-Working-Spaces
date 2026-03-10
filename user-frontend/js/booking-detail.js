@@ -116,9 +116,10 @@ async function cancelBooking(bookingId) {
     try {
         const res = await fetch(`${API_URL}/bookings/${bookingId}/status`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ status: 'cancelled' })
         });
+        if (res.status === 401 || res.status === 403) { logout(); return; }
         const result = await res.json();
         if (result.success) {
             showToast('Booking cancelled successfully.', 'success');

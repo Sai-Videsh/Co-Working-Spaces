@@ -43,12 +43,11 @@ async function calculateDynamicPrice(workspace_id, base_price, start_time, end_t
       .eq('id', workspace_id)
       .single();
 
-    // Get all workspaces in the same hub
+    // Get all workspaces in the same hub (is_available column may not exist – use status-neutral count)
     const { data: allWorkspaces } = await supabase
       .from('workspaces')
       .select('id')
-      .eq('hub_id', workspace.hub_id)
-      .eq('is_available', true);
+      .eq('hub_id', workspace.hub_id);
 
     const totalWorkspaces = allWorkspaces?.length || 1;
 

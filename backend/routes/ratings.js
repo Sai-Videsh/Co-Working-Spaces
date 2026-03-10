@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { supabase } = require('../config/supabase');
+const { validate, rules } = require('../middleware/validate');
 
 // Get all ratings (Admin)
 router.get('/', async (req, res) => {
@@ -35,12 +36,18 @@ router.post('/:workspace_id', async (req, res) => {
     const { workspace_id } = req.params;
     const { user_name, user_email, rating, review, booking_id } = req.body;
 
-    // Validate rating
-    if (!rating || rating < 1 || rating > 5) {
-      return res.status(400).json({
-        success: false,
-        error: 'Rating must be between 1 and 5'
-      });
+    // Validate all inputs
+    const err = validate(req.body, {
+      user_name: [rules.required, rules.string, rules.maxLen(100), rules.noScript],
+      rating:    [rules.required, rules.oneOf(['1','2','3','4','5',1,2,3,4,5])],
+      review:    [rules.maxLen(1000), rules.noScript],
+      user_email:[rules.email, rules.maxLen(255)],
+    });
+    if (err) return res.status(400).json({ success: false, error: err });
+
+    const numRating = Number(rating);
+    if (numRating < 1 || numRating > 5) {
+      return res.status(400).json({ success: false, error: 'Rating must be between 1 and 5' });
     }
 
     // Check if workspace exists
@@ -89,22 +96,39 @@ router.post('/:workspace_id', async (req, res) => {
       }
     }
 
-    // Insert rating
-    const { data, error } = await supabase
+    // Insert rating – build payload progressively so we gracefully handle
+    // columns that may not exist yet (user_email, booking_id) before migration.
+    const ratingPayload = { workspace_id, user_name, rating, review };
+    // Only include optional columns if values are provided (PostgREST ignores
+    // unknown columns in some versions but errors in strict mode – be safe).
+    if (user_email) ratingPayload.user_email = user_email;
+    if (booking_id) ratingPayload.booking_id = booking_id;
+
+    let insertData, insertError;
+
+    // First attempt with all fields
+    ({ data: insertData, error: insertError } = await supabase
       .from('ratings')
-      .insert([{
-        workspace_id,
-        user_name,
-        user_email,
-        rating,
-        review,
-        booking_id
-      }])
-      .select();
+      .insert([ratingPayload])
+      .select());
 
-    if (error) throw error;
+    if (insertError) {
+      // If the error is about unknown columns (migration not yet applied),
+      // retry with only the base columns that are guaranteed to exist.
+      const isColumnError = insertError.message?.includes('column') ||
+                            insertError.code === '42703';
+      if (isColumnError) {
+        const basePayload = { workspace_id, user_name, rating, review };
+        ({ data: insertData, error: insertError } = await supabase
+          .from('ratings')
+          .insert([basePayload])
+          .select());
+      }
+    }
 
-    res.json({ success: true, data: data[0] });
+    if (insertError) throw insertError;
+
+    res.json({ success: true, data: insertData[0] });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

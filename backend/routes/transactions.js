@@ -50,12 +50,15 @@ class TransactionAdapter {
 // Get current user's transactions (auth required)
 router.get('/my', authenticateToken, async (req, res) => {
   try {
+    const userEmail = req.user.email;
+
     const { data: bookings, error } = await supabase
       .from('bookings')
       .select(`
         id,
         workspace_id,
         user_name,
+        user_email,
         total_price,
         status,
         created_at,
@@ -68,7 +71,7 @@ router.get('/my', authenticateToken, async (req, res) => {
           )
         )
       `)
-      .eq('user_name', req.user.name)
+      .eq('user_email', userEmail)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
