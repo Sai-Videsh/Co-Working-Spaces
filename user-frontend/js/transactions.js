@@ -3,13 +3,40 @@
 let allTransactions = [];
 
 document.addEventListener('DOMContentLoaded', () => {
+    if (!requireAuth()) return;
     loadTransactions();
 });
 
-function loadTransactions() {
-    allTransactions = getTransactions().reverse(); // newest first
-    renderStats(allTransactions);
-    displayTransactions(allTransactions);
+async function loadTransactions() {
+    try {
+        const response = await fetch(`${API_URL}/transactions/my`, {
+            headers: getAuthHeaders()
+        });
+        if (response.status === 401 || response.status === 403) { logout(); return; }
+        const result = await response.json();
+        
+        if (result.success) {
+            // Map backend data to frontend format
+            allTransactions = result.data.map(txn => ({
+                id: txn.transaction_id || `TXN${txn.id}`,
+                workspace_name: txn.workspace,
+                user_name: txn.user,
+                amount: txn.amount,
+                status: txn.status,
+                method: txn.payment_method.toLowerCase(),
+                date: txn.date
+            }));
+            
+            renderStats(allTransactions);
+            displayTransactions(allTransactions);
+        } else {
+            console.error('Failed to load transactions:', result.error);
+            showError('Failed to load transactions. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error loading transactions:', error);
+        showError('Network error. Please check your connection.');
+    }
 }
 
 function renderStats(txns) {
@@ -56,4 +83,18 @@ function filterTransactions() {
         t.user_name.toLowerCase().includes(search)
     );
     displayTransactions(filtered);
+}
+
+function showError(message) {
+    const container = document.getElementById('transactions-list');
+    container.innerHTML = `
+        <div class="error-message" style="text-align: center; padding: 2rem; color: var(--danger);">
+            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+            <h3>Error Loading Transactions</h3>
+            <p>${message}</p>
+            <button onclick="loadTransactions()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-refresh"></i> Retry
+            </button>
+        </div>
+    `;
 }
