@@ -1521,12 +1521,13 @@ body {
 
 .input-group input {
     flex: 1;
-    padding: 0.875rem 1rem 0.875rem 2.75rem;
+    padding: 0.875rem 3rem 0.875rem 2.75rem;
     border: 2px solid var(--border);
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.3s ease;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .input-group input:focus {
@@ -1537,7 +1538,9 @@ body {
 
 .password-toggle {
     position: absolute;
-    right: 1rem;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
     color: var(--text-light);
@@ -1545,6 +1548,7 @@ body {
     padding: 0.25rem;
     border-radius: 4px;
     transition: color 0.3s ease;
+    z-index: 2;
 }
 
 .password-toggle:hover {
