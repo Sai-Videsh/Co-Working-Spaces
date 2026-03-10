@@ -8,7 +8,7 @@ const { authenticateToken } = require('../middleware/auth');
 router.get('/my', authenticateToken, async (req, res) => {
   try {
     const { status } = req.query;
-    const userEmail = req.user.email;
+    const userName = req.user.name;
 
     let query = supabase
       .from('bookings')
@@ -24,7 +24,7 @@ router.get('/my', authenticateToken, async (req, res) => {
           )
         )
       `)
-      .eq('user_email', userEmail)
+      .eq('user_name', userName)
       .order('created_at', { ascending: false });
 
     if (status) query = query.eq('status', status);
@@ -217,7 +217,6 @@ router.post('/', authenticateToken, async (req, res) => {
       .insert([{
         workspace_id,
         user_name,
-        user_email,
         start_time,
         end_time,
         total_price: finalPrice,

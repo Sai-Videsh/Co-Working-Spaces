@@ -119,6 +119,7 @@ async function populateDatabase() {
       return {
         workspace_id: workspace.id,
         user_name: booking.user_name,
+        user_email: booking.user_email || null,
         start_time: booking.start_time,
         end_time: booking.end_time,
         total_price: total_price,
