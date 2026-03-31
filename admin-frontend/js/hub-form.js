@@ -9,6 +9,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (isEdit) await loadHub();
 
+    // Add event listeners for map updates
+    document.getElementById('address').addEventListener('change', updateMapPreview);
+    document.getElementById('city').addEventListener('change', updateMapPreview);
+    document.getElementById('state').addEventListener('change', updateMapPreview);
+
+    // Initial map preview if editing
+    if (isEdit) {
+        updateMapPreview();
+    }
+
     document.getElementById('hub-form').addEventListener('submit', handleSubmit);
 });
 
@@ -29,6 +39,43 @@ async function loadHub() {
     } catch {
         showToast('Failed to load hub data', 'error');
     }
+}
+
+// Update map preview based on address fields
+function updateMapPreview() {
+    const address = document.getElementById('address')?.value || '';
+    const city = document.getElementById('city')?.value || '';
+    const state = document.getElementById('state')?.value || '';
+    
+    if (!address || !city) {
+        document.getElementById('hub-map-preview').innerHTML = '';
+        return;
+    }
+    
+    const fullAddress = `${address}, ${city}, ${state || ''}, India`;
+    const encodedAddress = encodeURIComponent(fullAddress);
+    
+    const mapContainer = document.getElementById('hub-map-preview');
+    if (!mapContainer) return;
+    
+    mapContainer.innerHTML = `
+        <div style="background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1);margin-top:1rem;overflow:hidden;">
+            <div style="width:100%;height:300px;position:relative;">
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    style="border:none;border-radius:8px;" 
+                    loading="lazy" 
+                    allowfullscreen="" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=${encodedAddress}&output=embed">
+                </iframe>
+            </div>
+            <div style="padding:1rem;background:#f8f9fa;border-top:1px solid #e0e0e0;">
+                <p style="margin:0;font-size:0.9rem;"><i class="fas fa-map-marker-alt" style="color:#3b82f6;margin-right:.5rem;"></i><strong>${fullAddress}</strong></p>
+            </div>
+        </div>
+    `;
 }
 
 async function handleSubmit(e) {

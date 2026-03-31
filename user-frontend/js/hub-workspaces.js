@@ -23,8 +23,48 @@ async function loadHub(hubId) {
             `${hubData.address}, ${hubData.city}, ${hubData.state}`;
         document.getElementById('hub-link').href = `hub-workspaces.html?hub_id=${hubId}`;
         document.title = `${hubData.name} - WorkSpace`;
+        
+        // Display hub location map
+        displayHubMap(hubData);
     } catch (e) {
         console.error('Error loading hub:', e);
+    }
+}
+
+// Display Hub Location Map
+function displayHubMap(hub) {
+    if (!hub || !hub.address || !hub.city) return;
+    
+    const fullAddress = `${hub.address}, ${hub.city}, ${hub.state || ''}, India`;
+    const encodedAddress = encodeURIComponent(fullAddress);
+    
+    const mapHTML = `
+        <div style="background:white;border-radius:8px;box-shadow:0 2px 10px var(--shadow);margin-bottom:2rem;overflow:hidden;">
+            <div style="width:100%;height:350px;position:relative;">
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    style="border:none;border-radius:8px;" 
+                    loading="lazy" 
+                    allowfullscreen="" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=${encodedAddress}&output=embed">
+                </iframe>
+            </div>
+            <div style="padding:1rem;background:#f8f9fa;border-top:1px solid #e0e0e0;">
+                <p style="margin:0;font-size:0.9rem;color:var(--text-light);"><i class="fas fa-map-marker-alt" style="color:var(--accent);margin-right:.5rem;"></i><strong>${hub.name}</strong></p>
+                <p style="margin:0.25rem 0 0 0;font-size:0.85rem;color:var(--text-light);">${fullAddress}</p>
+            </div>
+        </div>
+    `;
+    
+    // Insert map after hub header
+    const hubHeaderEnd = document.querySelector('.hub-header');
+    if (hubHeaderEnd && hubHeaderEnd.nextElementSibling) {
+        const mapContainer = document.createElement('div');
+        mapContainer.className = 'container';
+        mapContainer.innerHTML = mapHTML;
+        hubHeaderEnd.parentNode.insertBefore(mapContainer, hubHeaderEnd.nextElementSibling);
     }
 }
 

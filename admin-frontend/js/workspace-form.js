@@ -1,6 +1,7 @@
 /* admin-frontend/js/workspace-form.js */
 const workspaceId = getParam('workspace_id');
 const isEdit = !!workspaceId;
+let allHubs = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('form-heading').textContent = isEdit ? 'Edit Workspace' : 'Add New Workspace';
@@ -10,15 +11,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadHubs();
     if (isEdit) await loadWorkspace();
 
+    // Add event listener for hub selection change
+    document.getElementById('hub_id').addEventListener('change', updateHubPreview);
+    
+    // Show initial map if hub is selected
+    if (document.getElementById('hub_id').value) {
+        updateHubPreview();
+    }
+
     document.getElementById('workspace-form').addEventListener('submit', handleSubmit);
 });
 
 async function loadHubs() {
     try {
         const json = await fetch(`${API_URL}/hubs`).then(r => r.json());
-        const hubs = json.data || json;
+        allHubs = json.data || json;
         const sel = document.getElementById('hub_id');
-        hubs.forEach(h => {
+        allHubs.forEach(h => {
             const opt = document.createElement('option');
             opt.value = h.id; opt.textContent = h.name;
             sel.appendChild(opt);
@@ -26,6 +35,40 @@ async function loadHubs() {
     } catch {
         showToast('Failed to load hubs', 'error');
     }
+}
+
+// Update hub preview map when hub is selected
+function updateHubPreview() {
+    const hubId = document.getElementById('hub_id').value;
+    const hub = allHubs.find(h => h.id == hubId);
+    
+    if (!hub) return;
+    
+    const mapContainer = document.getElementById('hub-map-preview');
+    if (!mapContainer) return;
+    
+    const fullAddress = `${hub.address}, ${hub.city}, ${hub.state || ''}, India`;
+    const encodedAddress = encodeURIComponent(fullAddress);
+    
+    mapContainer.innerHTML = `
+        <div style="background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1);margin-top:1rem;overflow:hidden;">
+            <div style="width:100%;height:300px;position:relative;">
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    style="border:none;border-radius:8px;" 
+                    loading="lazy" 
+                    allowfullscreen="" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=${encodedAddress}&output=embed">
+                </iframe>
+            </div>
+            <div style="padding:1rem;background:#f8f9fa;border-top:1px solid #e0e0e0;">
+                <p style="margin:0;font-size:0.9rem;"><i class="fas fa-map-marker-alt" style="color:#3b82f6;margin-right:.5rem;"></i><strong>${hub.name}</strong></p>
+                <p style="margin:0.25rem 0 0 0;font-size:0.85rem;color:#666;">${fullAddress}</p>
+            </div>
+        </div>
+    `;
 }
 
 async function loadWorkspace() {
