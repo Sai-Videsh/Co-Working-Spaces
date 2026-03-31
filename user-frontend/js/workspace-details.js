@@ -69,6 +69,9 @@ async function loadWorkspace(wsId, hubId) {
                     </div>
                     ` : ''}
 
+                    <!-- Location Map -->
+                    ${generateLocationMap(ws.working_hubs)}
+
                     <!-- Hub Info -->
                     <div style="background:white;border-radius:8px;box-shadow:0 2px 10px var(--shadow);padding:1.5rem;">
                         <h3 style="color:var(--primary);margin-bottom:1rem;"><i class="fas fa-building" style="color:var(--accent);"></i> Hub Details</h3>
@@ -162,4 +165,36 @@ function generateAmenityCards(amenities) {
             </div>
         `;
     }).join('');
+}
+
+// Generate Location Map with Google Maps Embed
+function generateLocationMap(hub) {
+    if (!hub || !hub.address || !hub.city) {
+        return '';
+    }
+
+    const fullAddress = `${hub.address}, ${hub.city}, ${hub.state || ''}, India`;
+    const encodedAddress = encodeURIComponent(fullAddress);
+    
+    // Generate Google Maps Embed URL (no API key required for basic embeds)
+    const mapUrl = `https://www.google.com/maps/embed/v1/place?q=${encodedAddress}&key=AIzaSyDummyKeyPlaceholder`;
+    
+    return `
+        <div style="background:white;border-radius:8px;box-shadow:0 2px 10px var(--shadow);padding:0;margin-bottom:1.5rem;overflow:hidden;">
+            <div style="width:100%;height:300px;position:relative;">
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    style="border:none;border-radius:8px;" 
+                    loading="lazy" 
+                    allowfullscreen="" 
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=${encodedAddress}&output=embed">
+                </iframe>
+            </div>
+            <div style="padding:1rem;background:#f8f9fa;border-top:1px solid #e0e0e0;">
+                <p style="margin:0;font-size:0.9rem;color:var(--text-light);"><i class="fas fa-map-marker-alt" style="color:var(--accent);margin-right:.5rem;"></i>${fullAddress}</p>
+            </div>
+        </div>
+    `;
 }
