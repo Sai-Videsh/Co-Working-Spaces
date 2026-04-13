@@ -37,14 +37,45 @@ body {
 }
 
 /* Typography - Admin */
-h1, h2, h3 { font-family: 'Clash Display', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-h1, h2, h3 { font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
-h1 { font-size: clamp(1.4rem, 2.2vw, 2.2rem); font-weight:800; letter-spacing:-0.45px; }
-h2 { font-size: 1.1rem; font-weight:700; letter-spacing:-0.2px; }
-p, label, button, input, td, th { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+h1,
+h2,
+h3 {
+    font-family: 'Clash Display', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Plus Jakarta Sans', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+h1 {
+    font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.45px;
+}
+
+h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+p,
+label,
+button,
+input,
+td,
+th {
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
 
 /* Stronger admin heading */
-.admin-header h1 { font-family: 'Plus Jakarta Sans', Inter, sans-serif; font-weight:800; font-size:1.6rem; }
+.admin-header h1 {
+    font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+    font-weight: 800;
+    font-size: 1.6rem;
+}
 
 /* ── Sidebar ──────────────────────────────────── */
 .admin-sidebar {

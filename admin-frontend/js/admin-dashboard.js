@@ -1,6 +1,8 @@
 /* admin-frontend/js/admin-dashboard.js */
 let bookingsChart = null;
 let statusChart = null;
+let dashboardLoadSeq = 0;
+let dashboardLoadInProgress = false;
 
 document.addEventListener('DOMContentLoaded', loadDashboard);
 
@@ -15,6 +17,11 @@ window.addEventListener('pageshow', (event) => {
 });
 
 async function loadDashboard() {
+    if (dashboardLoadInProgress) return;
+
+    dashboardLoadInProgress = true;
+    const loadSeq = ++dashboardLoadSeq;
+
     try {
         const [hubs, workspaces, bookings, users] = await Promise.all([
             fetch(`${API_URL}/hubs`).then(r => r.json()).then(d => d.data || d),
@@ -22,6 +29,8 @@ async function loadDashboard() {
             fetch(`${API_URL}/bookings`).then(r => r.json()).then(d => d.data || d),
             fetch(`${API_URL}/users`, { headers: getAdminHeaders() }).then(r => r.json()).then(d => d.data || d).catch(() => [])
         ]);
+
+        if (loadSeq !== dashboardLoadSeq) return;
 
         // Calculate revenue: sum total_price from all paid bookings
         const paidStatuses = new Set(['confirmed', 'completed', 'checked_in']);
@@ -72,6 +81,10 @@ async function loadDashboard() {
         renderStatusDistributionChart(Array.isArray(bookings) ? bookings : []);
     } catch (err) {
         console.error('Dashboard load error', err);
+    } finally {
+        if (loadSeq === dashboardLoadSeq) {
+            dashboardLoadInProgress = false;
+        }
     }
 }
 
@@ -138,11 +151,6 @@ function renderBookingsTrendChart(bookings) {
     const ctx = document.getElementById('bookings-chart');
     if (!ctx) return;
 
-    // Destroy existing chart instance
-    if (bookingsChart) {
-        bookingsChart.destroy();
-    }
-
     // Get last 7 days
     const days = [];
     const counts = [];
@@ -164,7 +172,7 @@ function renderBookingsTrendChart(bookings) {
         counts.push(count);
     }
 
-    bookingsChart = new Chart(ctx, {
+    const chartConfig = {
         type: 'line',
         data: {
             labels: days,
@@ -180,6 +188,7 @@ function renderBookingsTrendChart(bookings) {
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            animation: false,
             plugins: {
                 legend: { display: false }
             },
@@ -190,17 +199,21 @@ function renderBookingsTrendChart(bookings) {
                 }
             }
         }
-    });
+    };
+
+    if (bookingsChart) {
+        bookingsChart.data.labels = chartConfig.data.labels;
+        bookingsChart.data.datasets[0].data = chartConfig.data.datasets[0].data;
+        bookingsChart.update('none');
+        return;
+    }
+
+    bookingsChart = new Chart(ctx, chartConfig);
 }
 
 function renderStatusDistributionChart(bookings) {
     const ctx = document.getElementById('status-chart');
     if (!ctx) return;
-
-    // Destroy existing chart instance
-    if (statusChart) {
-        statusChart.destroy();
-    }
 
     const statusCounts = {
         confirmed: bookings.filter(b => b.status === 'confirmed').length,
@@ -230,7 +243,7 @@ function renderStatusDistributionChart(bookings) {
         }
     }
 
-    statusChart = new Chart(ctx, {
+    const chartConfig = {
         type: 'doughnut',
         data: {
             labels: labels,
@@ -242,11 +255,22 @@ function renderStatusDistributionChart(bookings) {
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            animation: false,
             plugins: {
                 legend: {
                     position: 'bottom'
                 }
             }
         }
-    });
+    };
+
+    if (statusChart) {
+        statusChart.data.labels = chartConfig.data.labels;
+        statusChart.data.datasets[0].data = chartConfig.data.datasets[0].data;
+        statusChart.data.datasets[0].backgroundColor = chartConfig.data.datasets[0].backgroundColor;
+        statusChart.update('none');
+        return;
+    }
+
+    statusChart = new Chart(ctx, chartConfig);
 }
