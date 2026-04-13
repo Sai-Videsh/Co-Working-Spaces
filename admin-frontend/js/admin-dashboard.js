@@ -103,19 +103,30 @@ function renderRecentBookings(bookings) {
 
 function renderHubOverview(hubs, workspaces) {
     const el = document.getElementById('hub-overview');
-    if (!hubs.length) { el.innerHTML = '<p>No hubs found.</p>'; return; }
-    el.innerHTML = hubs.map(h => {
+    if (!el) return;
+
+    el.classList.remove('loading');
+
+    if (!hubs.length) {
+        el.innerHTML = '<p class="hub-overview-empty">No hubs found.</p>';
+        return;
+    }
+
+    const previewHubs = hubs.slice(0, 12);
+    const remainingCount = Math.max(hubs.length - previewHubs.length, 0);
+
+    el.innerHTML = `<div class="hub-overview-list">${previewHubs.map(h => {
         const count = workspaces.filter(w => w.hub_id === h.id).length;
         return `
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem 0;border-bottom:1px solid var(--border);">
-                <div>
+            <div class="hub-overview-item">
+                <div class="hub-overview-meta">
                     <strong>${h.name}</strong>
-                    <div style="font-size:.82rem;color:var(--text-light);">${h.city || ''}, ${h.state || ''}</div>
+                    <div class="hub-overview-location">${h.city || ''}${h.city && h.state ? ', ' : ''}${h.state || ''}</div>
                 </div>
-                <span class="badge badge-info">${count} workspace${count !== 1 ? 's' : ''}</span>
+                <span class="badge badge-info hub-overview-badge">${count} workspace${count !== 1 ? 's' : ''}</span>
             </div>
         `;
-    }).join('');
+    }).join('')}${remainingCount > 0 ? `<div class="hub-overview-more">And ${remainingCount} more hubs</div>` : ''}</div>`;
 }
 
 function statusBadge(status) {

@@ -238,6 +238,61 @@ p, label, button, input, td, th { font-family: Inter, system-ui, -apple-system, 
     box-shadow: 0 6px 18px rgba(198, 169, 105, .08);
 }
 
+.hub-overview-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.hub-overview-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .9rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.hub-overview-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.hub-overview-meta {
+    min-width: 0;
+}
+
+.hub-overview-meta strong {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.35;
+}
+
+.hub-overview-location {
+    margin-top: .2rem;
+    font-size: .82rem;
+    color: var(--text-light);
+    line-height: 1.35;
+}
+
+.hub-overview-badge {
+    flex-shrink: 0;
+}
+
+.hub-overview-empty {
+    text-align: center;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.hub-overview-more {
+    margin-top: .75rem;
+    padding-top: .75rem;
+    border-top: 1px solid var(--border);
+    font-size: .85rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
 .stat-card .value {
     font-size: 2rem;
     font-weight: 800;
